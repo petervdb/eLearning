@@ -271,6 +271,6 @@ db.getProfilingStatus()
 db.setProfilingStatus(1,4) # Level 1, 4 ms 
 db.setProfilingLevel(0) # Level 1, 4 ms 
 db.system.profile.find({millis:{$gt:1000}}).sort({ts:-1}) # all queries > 1000 ms
-
+db.profile.find({millis:{$gt:12800}}).sort({ts:-1}).pretty()
 
 
