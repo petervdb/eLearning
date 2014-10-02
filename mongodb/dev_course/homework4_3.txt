@@ -1,5 +1,13 @@
+# from the mongo shell
+use blog
+db.posts.drop()
+# from the a mac or PC terminal window
+mongoimport -d blog -c posts < posts.json
+
 > db.posts.ensureIndex({ 'date' : -1 })
 > db.posts.ensureIndex({ 'tags' : 1 })
+>  db.posts.ensureIndex({ 'tags' : 1, date : -1 })
+> db.posts.ensureIndex({ 'permalink' : 1 })
 > db.getProfilingLevel()
 > db.getProfilingStatus()
 > db.setProfilingStatus(1,4) # Level 1, 4 ms
