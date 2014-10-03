@@ -75,4 +75,11 @@ AC3 Case Black
 { "price" : 12.5 }
 { "price" : 12 }
 
+> use petervdb
+switched to db petervdb
+> for( var i=0; i < 20000; i++) {db.col1.insert( {x: i, y: "hi"}); }
+WriteResult({ "nInserted" : 1 })
+> db.col1.count()
+20000
+
 
