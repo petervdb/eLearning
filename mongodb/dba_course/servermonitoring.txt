@@ -1,0 +1,4 @@
+Use this command  to get a guideline about pages in memory:
+db.serverStatus({workingSet : 1})
+
+
