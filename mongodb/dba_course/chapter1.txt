@@ -1,5 +1,23 @@
 Concept
 --------------------------------------------
+local database is reserved and is used internally by MongoDB.
+
+Connect immediate to specific database
+> mongo localhost/school
+Instead of using pretty() you can also use toArray()
+Use // for comments in mongo shell
+
+> myproduct = { name : "AC3 Phone" }
+{ "name" : "AC3 Phone" }
+> myproduct
+{ "name" : "AC3 Phone" }
+> myproduct.price
+> myproduct.name
+AC3 Phone
+
+> db.products.find ( myproduct )
+{ "_id" : "ac3", "name" : "AC3 Phone", "brand" : "ACME", "type" : "phone", "price" : 200, "warranty_years" : 1, "available" : true }
+
 > db.products.find({},{name:1,_id:0}).sort({name:1})
 { "name" : "AC3 Case Black" }
 { "name" : "AC3 Case Green" }
