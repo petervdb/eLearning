@@ -3,3 +3,14 @@ Use following parameters for test or small environment:
 - smallFiles = true
 - nojournal = true
 
+Reclaim diskspace:
+- Compact does defragmentation, does not reclaim dskspace
+- Use repair to reclame diskspace
+- If possible do not use repair to repair data. Repair from replica.
+- You need up to 2 times used diskspace to repair
+- Resync ( Replica sets)
+
+Strategies:
+Use --directorydb : true  to create a directory for each database.
+Benchmarking is very important!!!
+
