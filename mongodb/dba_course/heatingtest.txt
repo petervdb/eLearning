@@ -1,0 +1,17 @@
+db.heatingTest.stats(1024 * 1024)
+for (var i = 1; i <= 200000; i++){ db.heatingTest.insert({date: new Date(), inc_field: i, randdom_padding : new String().pad(1024 * 10, "right", "a" ) } ) }
+db.listCommands()
+
+Touch data to get it into memory:
+db.runCommand({touch: "heatingTest", data: true, index: true})
+
+db.serverStatus({workingSet : 1 })
+mongostat > touch_test.txt
+
+To get data in memory:
+db.collection.find( {} ).explain()
+
+Pre-heating partly the data:
+- create index and filter data with find data. Use hint to force using specific index that is frequently used
+
+
