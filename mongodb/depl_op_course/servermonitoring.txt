@@ -2,6 +2,9 @@ Use this command  to get a guideline about pages in memory:
 db.serverStatus({workingSet : 1})
 
 Simulate restart Mongod by drop memory cached data:
-sudo sysctl -w vm.drop_cahces=3
+# sudo sysctl -w vm.drop_cahces=3
 Default is 0. Check for other values!
+
+Readahead information:
+# blockdev --report
 

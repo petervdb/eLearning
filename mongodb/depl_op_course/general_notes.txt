@@ -1,0 +1,5 @@
+Use following parameters for test or small environment:
+- oplogSize = 1024
+- smallFiles = true
+- nojournal = true
+
