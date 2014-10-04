@@ -13,4 +13,4 @@ Reclaim diskspace:
 Strategies:
 Use --directorydb : true  to create a directory for each database.
 Benchmarking is very important!!!
-
+Disable Memory Ballooning in VMWare. Can cause data corruption !!!
