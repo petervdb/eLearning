@@ -1,0 +1,26 @@
+- max 7 voting members
+- max 12 total members
+- For production environments, 3 nodes is the recommended use.
+- Have sufficient nodes for backups, upgrades, maintenance tasks, datawarehouse, ...
+
+Show status repl: rs.status()
+
+replica setup
+-----------------
+mongo --nodb
+var rst= new ReplSetTEst({ name: 'testSet', nodes: 3});
+rst.startSet(); // boot up the 3 nodes
+rst.initiate(); // 
+rs.status()
+
+Change replication:
+rs.syncFrom("education.local:31001")
+
+Change back: disable replica set chaining.
+cfg = rs.conf()
+cfg.settings.chainingAllowed = false
+cfg.settings = { }
+cfg.settings.chainingAllowed = false
+rs.reconfig(cfg)
+rs.conf()
+
