@@ -1,0 +1,15 @@
+> show collections
+fragColl
+system.indexes
+system.profile
+> db.runCommand ( { compact: 'fragColl' })
+{ "ok" : 1 }
+> db.runCommand ( { compact: 'fragColl', paddingFactor: 4.0 })
+{ "ok" : 1 }
+> db.runCommand ( { repairDatabase: 1 })
+{ "ok" : 1 }
+> db.fragColl.stats().size/db.fragColl.stats().storageSize
+0.8213309503784693
+> (db.stats().dataSize + db.stats().indexSize) / db.stats().fileSize
+0.2635173400243123
+>
