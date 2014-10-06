@@ -1,0 +1,11 @@
+Readahead
+-------------------------------------------------
+Spinned disks: takes a long time to get there. 2ed page reads much faster.
+Is not so important with SSD drives.
+Readahead: number of extra sectors to be read for any disk access.
+# sudo blockdev --report
+RA: 256 -> 256 x 512 byte sectors = 128 Kbytes data
+When good locality -> next data is in 128k block.
+Unfortunately, MongoDB is not very good in locality, except for oplog and capped collections.
+Seeks = expensive (but not for SSD drives)
+
