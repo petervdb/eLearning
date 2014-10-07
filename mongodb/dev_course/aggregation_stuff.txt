@@ -18,4 +18,42 @@ $out -> output = 1 to 1
 $redact
 $geonear
 
+Compount Grouping:
+db.products.aggregate([ {$group: { _id: { "maker": "$manufacturer", "category": "$category" }, num_products:{$sum: 1} } } ])
 
+Aggregation expressions:
+------------------------
+$sum
+$avg
+$min
+$max
+$push (builds an array)
+$addtoSet (builds an array)
+$first (sort)
+$last (sort)
+
+
+db.products.aggregate([ {$group: { _id: { "maker": "$manufacturer" }, num_products:{$sum: "$price" } } } ])
+db.zips.aggregate( [ { "$group": { "_id": "$state" , population: {$sum: "$pop" } } } ] )
+db.zips.aggregate( [ { "$group": { "_id": "$state" , avg_pop: {$avg: "$pop" } } } ] )
+
+db.products.aggregate([ {$group: { _id: { "maker": "$manufacturer" }, categories:{$addToSet: "$category" } } } ])
+
+Show all postal codes for a specific city:
+db.zips.aggregate( [ { "$group" : { "_id": "$city", "postal_codes" : {$addToSet: "$_id" } } } ] )
+
+Will show duplicates in categories:
+db.products.aggregate([ {$group: { _id: { "maker": "$manufacturer" }, categories:{$push: "$category" } } } ])
+
+
+db.products.aggregate([ {$group: { _id: { "maker": "$manufacturer" }, maxprice:{$max: "$price" } } } ])
+db.products.aggregate([ {$group: { _id: { "maker": "$manufacturer" }, minprice:{$min: "$price" } } } ])
+db.zips.aggregate( [ { "$group": { "_id": "$state" , max_population: {$max: "$pop" } } } ] )
+
+Double Grouping:
+-------------------------
+db.grades.aggregate([
+	{'$group': {_id:{call_id:"$class_id", student_id:"$student_id"}, 'average':{"$avg": "$score" }}},
+	{'$group': {_id:"$_id.class_id", 'average':{"$avg": "$average" }}}])
+
+	
