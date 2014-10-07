@@ -5,4 +5,17 @@ db.products.aggregate([ {$group: { _id:"$manufacturer", num_products:{$sum: 1} }
 Show number of products grouped by category:
 db.products.aggregate( [ {$group: { _id: "$category", "num_products": {$sum: 1} } } ])
 
+Aggregation pipeline
+$project -> reshape document = 1 to 1
+$match -> filter = n to 1
+$group -> aggregate = n to 1
+$sort -> sort = 1 to 1
+$skip -> skips = n to 1
+$limit -> limits = n to 1
+$unwind -> normalize = 1 to n
+$out -> output = 1 to 1
+------------------------------
+$redact
+$geonear
+
 
