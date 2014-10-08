@@ -120,3 +120,9 @@ db.sentences.aggregate([
 
 Using $sort
 --------------------------
+Disk and memory base sorting. Limited to 100MB.
+Can be used before and after the grouping.
+
+db.zips.aggregate([
+  { $sort: {state:1, city:1}}
+])
