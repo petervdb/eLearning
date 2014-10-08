@@ -50,13 +50,14 @@ db.products.aggregate([ {$group: { _id: { "maker": "$manufacturer" }, maxprice:{
 db.products.aggregate([ {$group: { _id: { "maker": "$manufacturer" }, minprice:{$min: "$price" } } } ])
 db.zips.aggregate( [ { "$group": { "_id": "$state" , max_population: {$max: "$pop" } } } ] )
 
-Double Grouping:
+Using Double Grouping:
 -------------------------
 db.grades.aggregate([
 	{'$group': {_id:{call_id:"$class_id", student_id:"$student_id"}, 'average':{"$avg": "$score" }}},
 	{'$group': {_id:"$_id.class_id", 'average':{"$avg": "$average" }}}])
 
-	
+Using $project
+----------------------------------	
 db.products.aggregate([
   {$project:
     {
@@ -82,3 +83,40 @@ db.zips.aggregate([
   }
 ])
 
+Using $match
+------------------------------
+db.zips.aggregate([ { $match: { state:"CA"}} ])
+
+db.zips.aggregate([ { $match: { state:"CA"}},{$group: { _id: "$city",
+	population: {$sum: "$pop"},
+	zip_codes: {$addToSet: "$_id"}
+  } } ])
+
+db.zips.aggregate([ { $match: { state:"CA"}},{$group: { _id: "$city",
+	population: {$sum: "$pop"},
+	zip_codes: {$addToSet: "$_id"}
+	} },
+	{ $project:
+    { _id : 0,
+      city: "$_id",
+      population: 1,
+      zip_codes: 1
+    }
+  }
+ ])
+
+db.zips.aggregate([ { $match: { pop: { $gt: 100000} } } ])
+
+Using $text
+--------------------------
+db.sentences.aggregate([
+  {$match: { $text: { $search: "tree rat"}}
+  },
+  { $sort: { score: {$meta: "textScore" }}
+  },
+  { $project: { words: 1, _id: 0 }
+  }
+])
+
+Using $sort
+--------------------------
