@@ -3,3 +3,16 @@ Homework stuff for Chapter 5
 > db.posts.aggregate( [{ $project: {_id: 0, permalink: 1}},{$limit: 1} ] )
 { "permalink" : "TqoHkbHyUgLyCKWgPLqm" }
 
+>  db.posts.aggregate( [{ $group: { _id: "$title", amount: {$sum: 1 } } }, { $project: {_id: 0, title: "$_id", amount: 1
+} } ] )
+{ "amount" : 223, "title" : "Declaration of Independence" }
+{ "amount" : 243, "title" : "Gettysburg Address" }
+{ "amount" : 255, "title" : "Bill of Rights" }
+{ "amount" : 279, "title" : "US Constitution" }
+
+> db.posts.count()
+1000
+> 223+243+255+279
+1000
+
+
