@@ -1,0 +1,5 @@
+Homework stuff for Chapter 5
+----------------------------
+> db.posts.aggregate( [{ $project: {_id: 0, permalink: 1}},{$limit: 1} ] )
+{ "permalink" : "TqoHkbHyUgLyCKWgPLqm" }
+

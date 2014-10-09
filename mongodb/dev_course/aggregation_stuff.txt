@@ -201,3 +201,12 @@ Python & aggregation
 -----------------------
 Prior to 2.6: one big document -> 16MB
 New in 2.6: aggregations return a cursor.
+
+SQL to Aggregation Framework Mapping Chart:
+https://university.mongodb.com/courses/10gen/M101P/2014_September/courseware/Chapter_5_Aggregation_Framework/52aa41aae2d4232c54a18b2d/
+
+Limitations in aggregations
+---------------------------
+100MB limit for pipeline or use allowDiskUse
+16MB limit for 1 document. Default for Python. Or use cursor = {}
+Scalability issues when sharding !!!
