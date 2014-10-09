@@ -189,3 +189,15 @@ When the values in the array are unique, you can also use addToSet.
 Using $out (new in 2.6)
 -------------------------
 Be careful! Will overwrite the collection if it already exsists.
+
+Aggregation options
+--------------------
+Geen $ gebruiken voor explain en de explain buiten de array plaatsen!!!
+{ explain : true}
+{ allowDiskUse : true }
+aggregate([stage, stage, stage], { explain: true } )
+
+Python & aggregation
+-----------------------
+Prior to 2.6: one big document -> 16MB
+New in 2.6: aggregations return a cursor.
