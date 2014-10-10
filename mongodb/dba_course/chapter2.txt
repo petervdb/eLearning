@@ -34,4 +34,26 @@ db.users.update({_id : "Jane"}, {$push: {likes: ["footbal"]}},{upsert: true})
 db.users.update({_id : "Jane"}, {$set: {likes: ["tennis","golf","footbal"]}},{upsert: true})
 db.users.update({_id : "Jane"}, {$set: {likes: ["tennis","golf","footbal"]}})
 
+> db.runCommand( {isMaster: 1})
+{
+        "ismaster" : true,
+        "maxBsonObjectSize" : 16777216,
+        "maxMessageSizeBytes" : 48000000,
+        "maxWriteBatchSize" : 1000,
+        "localTime" : ISODate("2014-10-10T20:24:22.825Z"),
+        "maxWireVersion" : 2,
+        "minWireVersion" : 0,
+        "ok" : 1
+}
+> db.isMaster()
+{
+        "ismaster" : true,
+        "maxBsonObjectSize" : 16777216,
+        "maxMessageSizeBytes" : 48000000,
+        "maxWriteBatchSize" : 1000,
+        "localTime" : ISODate("2014-10-10T20:25:19.616Z"),
+        "maxWireVersion" : 2,
+        "minWireVersion" : 0,
+        "ok" : 1
+}
 
