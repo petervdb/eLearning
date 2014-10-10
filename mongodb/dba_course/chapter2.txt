@@ -1,0 +1,37 @@
+> db.users.remove({ 'registered' : false, 'addr.city' : "Lyon"})
+WriteResult({ "nRemoved" : 33 })
+> db.users.findOne()
+{
+	"_id" : ObjectId("54382842132c1f0db79c5c60"),
+	"registered" : false,
+	"likes" : [
+		"pottery",
+		"writing"
+	],
+	"addr" : {
+		"city" : "Lisbon",
+		"country" : "Portugal"
+	},
+	"name" : "David"
+}
+
+> db.collection.update( query_document , update_document , [ upsert_boolean , [ multi_boolean ] ] )
+
+We now recommend:
+
+> db.collection.update( query_document, update_document, options_document )
+where options_document contains key:value pairs such as:
+
+multi : true/false, 
+upsert : true/false,
+writeConcern: document
+
+> db.users.update({_id : "Jane"}, {likes: ["footbal"],{upsert: true})
+Error: Line 1: Unexpected token {
+db.users.update({_id : "Jane"}, {$addToSet: {likes: ["footbal"]}},{upsert: true})
+db.users.update({_id : "Jane"}, {$set: {likes: ["footbal"]}},{upsert: true})
+db.users.update({_id : "Jane"}, {$push: {likes: ["footbal"]}},{upsert: true})
+db.users.update({_id : "Jane"}, {$set: {likes: ["tennis","golf","footbal"]}},{upsert: true})
+db.users.update({_id : "Jane"}, {$set: {likes: ["tennis","golf","footbal"]}})
+
+
