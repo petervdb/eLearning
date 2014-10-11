@@ -1,0 +1,7 @@
+Do not use mongoimport and mongoexport
+Mongodump and mongorestore should be used only for small databases.
+Config database can be done with mongodump and mongorestore
+
+Mongodump:
+- Will scan the _id index.
+
