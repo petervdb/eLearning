@@ -4,5 +4,13 @@ Reference numbers:
 1 min = 99,9998%
 1 hour = 99,9886%
 1 day = 99,7260%
+3 days = > 99%
+3 days = > 99%
+3 days = > 99%
 
+Downtime tolerance
+------------------
+- Data Loss
+- Downtime
+- Reduced Capacity
 
