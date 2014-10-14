@@ -6,7 +6,7 @@ j : 1 -> wait until write is saved to disk in the journal
 w	j
 ----------
 0	0	fire and forget
-1	0	acknowledge
+1	0	acknowledge (the default)
 1	1	commit to journal
 0	1	getLastError, it's journaled
 
@@ -53,4 +53,16 @@ This information can be found in log files.
 The entire dataset will be copied from the primary if the oplog has looped.
 
 Failover detection and testing must be build into the application!!!
+
+Sharding
+--------
+Do sharding for Scaling out!!!
+Shards split data up.
+Mongos is the router. Takes care of the distribution.
+The application will talk with mongos.
+Range base approach.
+Shard key. Must be used at every insert.
+Default: S0 will be used. The shard key is part of the document.
+There can be multiple Mongos.
+ 
   
