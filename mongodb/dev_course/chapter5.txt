@@ -52,4 +52,5 @@ Rollback by default occurs when failed master is back and some data can not be f
 This information can be found in log files.
 The entire dataset will be copied from the primary if the oplog has looped.
 
+Failover detection and testing must be build into the application!!!
   
