@@ -1,5 +1,8 @@
+Notes Chapter 5 MongodB developers course
+-----------------------------------------------------------
 w : 1 -> Wait for the write to be acknowledged
-j : 1 -> wait until write is saved to disk in the journal
+j : 1 -> wait until write is saved to disk in the journal  
+
 w	j
 ----------
 0	0	fire and forget
@@ -7,6 +10,46 @@ w	j
 1	1	commit to journal
 0	1	getLastError, it's journaled
 
-Network errors
---------------
+Check api.mongodb.org
 
+Replication
+------------------
+Use it for availability and fault tolerance
+Nodes:
+Regular, Arbiter, Delayed, Hidden
+
+Write Consistency
+-----------------
+Replication is asynchronous
+During failover, you can not write.
+
+Creating a replica set on a single node
+mongodb --replSet rs1 --logpath "1.log" --dbpath /data/rs1 --port 27017 --fork
+mongodb --replSet rs1 --logpath "2.log" --dbpath /data/rs2 --port 27018 --fork
+mongodb --replSet rs1 --logpath "3.log" --dbpath /data/rs3 --port 27019 --fork
+
+Now these are independent database servers
+Init replication script
+
+config = { _id: "rs1", members: [
+  { _id : 0, host : "localhost:27017", priority: 0, slaveDelay: 5 },
+  { _id : 1, host : "localhost:27018" },
+  { _id : 2, host : "localhost:27019" } ]
+}
+rs.initiate(config)
+rs.status()
+
+When connected to the secondary:
+rs.slaveOk()
+
+Replicated data can be found in oplog
+use local
+db.oplog.rs.find().pretty()
+
+Failover and Rollback
+---------------------
+Rollback by default occurs when failed master is back and some data can not be found.
+This information can be found in log files.
+The entire dataset will be copied from the primary if the oplog has looped.
+
+  
