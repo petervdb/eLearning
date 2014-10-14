@@ -65,4 +65,8 @@ Shard key. Must be used at every insert.
 Default: S0 will be used. The shard key is part of the document.
 There can be multiple Mongos.
  
-  
+Sharding key:
+If document does not existsn it will be created with the correct index.
+If the document already exists, make sure that the index exists, otherwise it will not work!
+
+
