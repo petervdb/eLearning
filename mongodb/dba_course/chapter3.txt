@@ -1,0 +1,5 @@
+Chapter 3
+---------
+Indexes both ascending and descending indexes can be used by the same query.
+db.document.ensureIndex({ keypattern : 1 })
+
