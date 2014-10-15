@@ -2,4 +2,26 @@ Chapter 3
 ---------
 Indexes both ascending and descending indexes can be used by the same query.
 db.document.ensureIndex({ keypattern : 1 })
+Index on _id  is created automatically.
+Indexes are automatically used when possible.
+Indexes on arrays is also possible -> multikeys
+Index on sub-documents is possible.
+
+Different kind of indexes
+-------------------------
+- Default
+- unique: true
+- sparse : true (can be interesting if there are a small amount of documents with that field used)
+- TTL 
+- geospatial indexes (2 -dimentional)
+db.places.ensureIndex({ loc: "2dsphere" })
+db.places.getIndexes()
+
+- text
+Without index you could do:
+db.sentences.find ({ words : /blabla/ })
+db.sentences.ensureIndex( { words: "text" } ) /* a bit similar to multikey index */
+db.sentences.find ( { $text : { $search : "blabla" } } )
+db.sentences.find ( { $text : { $search : "bla bli" } } ) /* works like an or */
+Options: default_language:"english"
 
