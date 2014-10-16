@@ -25,9 +25,9 @@ db.sentences.find ( { $text : { $search : "blabla" } } )
 db.sentences.find ( { $text : { $search : "bla bli" } } ) /* works like an or */
 Options: default_language:"english"
 
-To remote duplicates:
+To remove duplicates:
 ---------------------
-dropDups : true
+db.document.ensureIndex( { x: 1}, { unique : true, dropDups : true } )
 
 To remove an index:
 -------------------
@@ -37,4 +37,11 @@ View all indexes:
 -----------------
 db.system.indexes.find()
 
+Create indexes in the background:
+---------------------------------
+background : true
+
+Remarks on background: 
+It is only a background operation on the primary, not on the secondary.
+It is slower than executed on the forground.
 
