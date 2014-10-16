@@ -25,3 +25,16 @@ db.sentences.find ( { $text : { $search : "blabla" } } )
 db.sentences.find ( { $text : { $search : "bla bli" } } ) /* works like an or */
 Options: default_language:"english"
 
+To remote duplicates:
+---------------------
+dropDups : true
+
+To remove an index:
+-------------------
+t.dropIndex({ field : 1 })
+
+View all indexes:
+-----------------
+db.system.indexes.find()
+
+
