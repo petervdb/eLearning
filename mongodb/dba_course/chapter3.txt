@@ -66,7 +66,10 @@ Padding: creates some extra space at the end of the document.
 Monitoring
 ----------
 Use mongostat and mongotop
-Use currentOp() to analyse running slow queries.
-Use killOp() to kill a slow query
+Use db.currentOp() to analyse running slow queries.
+db.currentOp().inprog.length
 
+Use db.killOp() to kill a slow query
 
+If you kill a compact command, you will loose all your indexes.
+Don't kill internal ops.
