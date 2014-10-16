@@ -1,7 +1,7 @@
 Chapter 3
 ---------
 Indexes both ascending and descending indexes can be used by the same query.
-db.document.ensureIndex({ keypattern : 1 })
+db.collection.ensureIndex({ keypattern : 1 })
 Index on _id  is created automatically.
 Indexes are automatically used when possible.
 Indexes on arrays is also possible -> multikeys
@@ -27,7 +27,7 @@ Options: default_language:"english"
 
 To remove duplicates:
 ---------------------
-db.document.ensureIndex( { x: 1}, { unique : true, dropDups : true } )
+db.collection.ensureIndex( { x: 1}, { unique : true, dropDups : true } )
 
 To remove an index:
 -------------------
@@ -49,9 +49,24 @@ Covered Indexes
 ---------------
 When using explain, check if indexOnly is true. When indexOnly is true you have a covered index.
 
+Explain() and hint()
+--------------------
+Explain executes the query, so it can be very slow.
+Use hint to force that a specific Index will be uset see if that index is used: explain().cursor
+hint({ $natural : 1 }) will force a full scan of the collection
+
+Read and write impact on Indexes
+--------------------------------
+Writes are generally slower.
+Indexes speed up reads but slow down writes.
+Preferable indexes should be stored in RAM.
+
+Padding: creates some extra space at the end of the document.
+
 Monitoring
 ----------
 Use mongostat and mongotop
 Use currentOp() to analyse running slow queries.
 Use killOp() to kill a slow query
+
 
