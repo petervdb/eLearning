@@ -45,3 +45,13 @@ Remarks on background:
 It is only a background operation on the primary, not on the secondary.
 It is slower than executed on the forground.
 
+Covered Indexes
+---------------
+When using explain, check if indexOnly is true. When indexOnly is true you have a covered index.
+
+Monitoring
+----------
+Use mongostat and mongotop
+Use currentOp() to analyse running slow queries.
+Use killOp() to kill a slow query
+
