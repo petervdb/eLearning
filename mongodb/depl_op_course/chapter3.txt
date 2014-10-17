@@ -1,0 +1,17 @@
+MongoDB Deployment and intrastructure maintenance - Chapter 3
+-------------------------------------------------------------
+
+Rolling maintenance
+-------------------
+You need at least 3 nodes.
+Oplog needs to be big enough.
+
+Performing maintenance
+----------------------
+Shutdown instance
+Startup without --replSet and on a different port!
+Perform maintenance
+Shutdown and startup with --replSet and on the original port.
+
+Wait before the secondary catch up before starting the maintenance on the other secondary server.
+
