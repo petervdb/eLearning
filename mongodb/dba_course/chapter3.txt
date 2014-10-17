@@ -74,6 +74,9 @@ Use db.killOp() to kill a slow query
 If you kill a compact command, you will loose all your indexes.
 Don't kill internal ops.
 
+Mongostat: getmore are generally from seconday instances.
+Mongotop: view by collection, the lock activity.
+
 Profiling
 ---------
 0 off
