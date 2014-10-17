@@ -14,4 +14,38 @@ Perform maintenance
 Shutdown and startup with --replSet and on the original port.
 
 Wait before the secondary catch up before starting the maintenance on the other secondary server.
+Perform rs.stepDown() on primary to gracefully promote a secondary to become primary.
+
+Use cases
+----------
+- Upgrading the binaries
+- Index builds. First on secondary, stepdown primary and repeat process
+- Compact / Repair
+
+Load Balancers
+--------------
+No, if you are using a replica set.
+Yes, if you are sharding
+But be carefull. LB needs to be configured correctly.
+
+Driver options
+--------------
+Throw exception is the default. But you can set on retry.
+Connection timeout.
+Generic - most familiar with the Java driver.
+Connections per host.
+Count about 1M for each connection. 10000 connections -> 10GB RAM
+
+Socket TimeOut
+--------------
+Default value is infinite
+Be carefull when setting timeouts!!!
+
+High Availability
+-----------------
+Use a list of MongoClients when using mongos.
+
+Connection management in replica set
+------------------------------------
+
 
