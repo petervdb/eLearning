@@ -73,3 +73,21 @@ Use db.killOp() to kill a slow query
 
 If you kill a compact command, you will loose all your indexes.
 Don't kill internal ops.
+
+Profiling
+---------
+0 off
+1 selective (slow)
+2 on
+
+db.setProfilingLevel(2) /* for the database you are connected to */
+db.system.profile.find().pretty()
+
+db.system.profile.find()
+db.system.profile.find.sort({$natural: -1})
+
+db.getProfilingStatus()
+
+Remarks: For write performance, the profile does not have any indexes.
+
+
