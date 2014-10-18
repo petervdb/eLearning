@@ -48,4 +48,11 @@ Use a list of MongoClients when using mongos.
 Connection management in replica set
 ------------------------------------
 
+Rollback
+--------
+There is a lag in the replication and the primary fails!
+Secondary becomes primary. 
+When primary comes back, it will go in Rollback state
+Rollback state: Dump out data to disk and become secondary. 
+Data can not be bigger then 300MB.
 

@@ -1,0 +1,34 @@
+This is an example on how to setup a replica set a primary, secondary and arbiter.
+And a simulation will be done to perform a rollback.
+
+1. Startup the 3 mongod processes:
+Verify that the directories exist before starting the daemons.
+
+# mongod --smallfiles --replSet ch33 --dbpath /home/petervdb/mongodb26/data/ch33_pri --logpath /home/petervdb/mongodb26/log/ch33_pri.log --port 27017 --fork
+# mongod --smallfiles --replSet ch33 --dbpath /home/petervdb/mongodb26/data/ch33_sec --logpath /home/petervdb/mongodb26/log/ch33_sec.log --port 27018 --fork
+# mongod --smallfiles --replSet ch33 --dbpath /home/petervdb/mongodb26/data/ch33_arb --logpath /home/petervdb/mongodb26/log/ch33_arb.log --port 27019 --fork
+
+2. Connect to the primary and perform initial config:
+# mongo --port 27017
+
+/* We will first configure both the primary and seconday nodes */
+> config = { _id: "ch33", members: [ { _id : 0, host : "localhost:27017" }, { _id : 1, host : "localhost:27018" } ] }
+rs.initiate(config)
+rs.status()
+
+/* Let's add the arbiter */
+rs.addArb("localhost:27019")
+
+/* Lets insert some data */
+use testDB
+ch33:PRIMARY> db.testColl.insert( {a : 1, x : 1 })
+
+Now, kill the secondary MongoDB daemon and perform some inserts.
+Now, kill the primary MongoDB. Only the Arbiter should be running. 
+And start the killed secondary MongoDB. This one should become primary.
+Do some inserts again.
+And now start the killed primary. This one should come up as secondary and a rollback directory should be created.
+Perform a rs.stepDown() on the primary. The original primary where the rollback was executed should now be the primary again.
+
+Finished.
+
