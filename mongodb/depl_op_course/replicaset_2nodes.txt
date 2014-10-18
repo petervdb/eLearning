@@ -1,0 +1,32 @@
+This is an example on how to setup a replica set with 2 nodes.
+On the second node a special index will be created that does not exists on the primary.
+
+1. Startup the 2 mongod processes:
+# mongod --replSet ch3 --dbpath /home/petervdb/mongodb26/data/ch3_pri --port 27017
+# mongod --replSet ch3 --dbpath /home/petervdb/mongodb26/data/ch3_sec --port 27018
+
+2. Connect to the primary and perform initial config:
+# mongo --port 27017
+
+/* by setting priority to 0, the secondary can not become primary */
+> config = { _id: "ch3", members: [ { _id : 0, host : "localhost:27017" }, { _id : 1, host : "localhost:27018", priority : 0 } ] }
+rs.initiate(config)
+rs.status()
+
+/* Lets insert some data */
+use testDB
+ch3:PRIMARY> db.testColl.insert( {a : 1, x : 1 })
+
+/* when everything is running correctly, shutdown the secondary and start it up again without --replSet and on a different port */
+
+# mongod --dbpath /home/petervdb/mongodb26/data/ch3_sec --port 27019
+
+/* Connect to port 27019 and create the special index */
+use testDB
+db.testDB.testColl.ensureIndex({ a : 1 })
+
+/* Now, exit and shutdown mongod */
+/* startup mongod backup with --replSet and on the original port */
+
+Finished.
+
