@@ -8,6 +8,7 @@ def print_all(f):
 	print f.read()
 
 def rewind(f):
+	# Go to byte 0 or to the beginning of the file
 	f.seek(0)
 
 def print_a_line(line_count, f):
@@ -35,7 +36,8 @@ current_line = current_line + 1
 print_a_line(current_line, current_file)
 
 # print the third line
-current_line = current_line + 1
+# notice that this is another method to increase the variable
+current_line += 1
 print_a_line(current_line, current_file)
 
 print"Then name of this script is %s" % script
