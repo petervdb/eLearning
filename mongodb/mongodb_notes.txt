@@ -3,6 +3,7 @@ This commands are taken from the MongoDB university training course for develope
 
 Add Test data:
 > for (i=0; i<1000; i++) { names=["exam", "essay", "quiz"]; for (j=0;j<3;j++) {db.scores.insert( { "student" : i, "type" : names[j], score : Math.round(Math.random()*100) } ); } }
+> for (i=0; i<1000; i++) { names=["a", "b", "c"]; for (j=0;j<3;j++) {db.fubar.insert( { "a" : i, "b" :  Math.round(Math.random()*10000), c : Math.round(Math.random()*10000) } ); } }
 
 db.scores.find( { $or : [ {"score" : { $lt : 50 }}, {"score" : { $gt : 90 }} ] } );
 db.users.find( { "name" : { $regex : "q" }, "email" : { $exists : true } } );
