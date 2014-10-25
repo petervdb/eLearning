@@ -1,0 +1,9 @@
+Upgrading
+---------
+Mongo 2.4: Strict order required
+General Notes
+-------------
+Secondaries first
+Upgrade primaries (stepDown)
+Config Servers
+Mongos processes
