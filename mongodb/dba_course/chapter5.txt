@@ -1,0 +1,26 @@
+Homework 5.1
+------------
+Created dba5 folder for the homework.
+Created rs1, rs2 and rs3 folder in dba5 folder
+
+Startup different instances with following command:
+D:\mongodb26\bin\mongod.exe --dbpath D:\mongodb26\data\dba5\rs1 --smallfiles --oplogSize 50 --port 27001 --replSet dba5
+D:\mongodb26\bin\mongod.exe --dbpath D:\mongodb26\data\dba5\rs2 --smallfiles --oplogSize 50 --port 27002 --replSet dba5
+D:\mongodb26\bin\mongod.exe --dbpath D:\mongodb26\data\dba5\rs3 --smallfiles --oplogSize 50 --port 27003 --replSet dba5
+
+
+Connect to the first instance and initiate
+
+D:\mongodb26>bin\mongo.exe --port 27001
+MongoDB shell version: 2.6.4
+connecting to: 127.0.0.1:27001/test
+> rs.initiate()                                                               
+{                                                                             
+        "info2" : "no configuration explicitly specified -- making one",      
+        "me" : "PLCOMP726:27001",                                             
+        "info" : "Config now saved locally.  Should come online in about a min
+ute.",                                                                        
+        "ok" : 1                                                              
+}                                                                             
+
+
