@@ -143,3 +143,20 @@ dba5:PRIMARY> rs.status()
 
 You can see that the stat for the arbiter is 7.
 
+Homework 5.2
+------------
+I would add an arbiter and add another data bearing node.
+
+
+Homework 5.3
+------------
+db.m102.insert([ { "a" : 1 }, { "b" : 2 }, { "c" : 3 } ])
+
+Homework 5.4
+------------
+None of the above
+
+Homework 5.5
+------------
+{"force" : true}
+
