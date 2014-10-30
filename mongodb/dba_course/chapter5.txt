@@ -23,4 +23,123 @@ ute.",
         "ok" : 1                                                              
 }                                                                             
 
+dba5:OTHER> rs.status()                                                      
+{                                                                            
+        "set" : "dba5",                                                      
+        "date" : ISODate("2014-10-30T20:21:43Z"),                            
+        "myState" : 1,                                                       
+        "members" : [                                                        
+                {                                                            
+                        "_id" : 0,                                           
+                        "name" : "PLCOMP726:27001",                          
+                        "health" : 1,                                        
+                        "state" : 1,                                         
+                        "stateStr" : "PRIMARY",                              
+                        "uptime" : 1018,                                     
+                        "optime" : Timestamp(1414700016, 1),                 
+                        "optimeDate" : ISODate("2014-10-30T20:13:36Z"),      
+                        "electionTime" : Timestamp(1414700016, 2),           
+                        "electionDate" : ISODate("2014-10-30T20:13:36Z"),    
+                        "self" : true                                        
+                }                                                            
+        ],                                                                   
+        "ok" : 1                                                             
+}                                                                            
+
+Let's add the 2ed node:
+dba5:PRIMARY> rs.add("PLCOMP726:27002")
+{ "ok" : 1 }
+
+dba5:PRIMARY> rs.status()                                                                                 
+{                                                                                                         
+        "set" : "dba5",                                                                                   
+        "date" : ISODate("2014-10-30T20:24:29Z"),                                                         
+        "myState" : 1,                                                                                    
+        "members" : [                                                                                     
+                {                                                                                         
+                        "_id" : 0,                                                                        
+                        "name" : "PLCOMP726:27001",                                                       
+                        "health" : 1,                                                                     
+                        "state" : 1,                                                                      
+                        "stateStr" : "PRIMARY",                                                           
+                        "uptime" : 1184,                                                                  
+                        "optime" : Timestamp(1414700639, 1),                                              
+                        "optimeDate" : ISODate("2014-10-30T20:23:59Z"),                                   
+                        "electionTime" : Timestamp(1414700016, 2),                                        
+                        "electionDate" : ISODate("2014-10-30T20:13:36Z"),                                 
+                        "self" : true                                                                     
+                },                                                                                        
+                {                                                                                         
+                        "_id" : 1,                                                                        
+                        "name" : "PLCOMP726:27002",                                                       
+                        "health" : 1,                                                                     
+                        "state" : 2,                                                                      
+                        "stateStr" : "SECONDARY",                                                         
+                        "uptime" : 30,                                                                    
+                        "optime" : Timestamp(1414700639, 1),                                              
+                        "optimeDate" : ISODate("2014-10-30T20:23:59Z"),                                   
+                        "lastHeartbeat" : ISODate("2014-10-30T20:24:27Z"),                                
+                        "lastHeartbeatRecv" : ISODate("2014-10-30T20:24:27Z"),                            
+                        "pingMs" : 0,                                                                     
+                        "syncingTo" : "PLCOMP726:27001"                                                   
+                }                                                                                         
+        ],                                                                                                
+        "ok" : 1                                                                                          
+}                                                                                                         
+
+
+Let's add the 3rd node as arbiter:
+dba5:PRIMARY> rs.addArb("PLCOMP726:27003")
+{ "down" : [ "PLCOMP727:27003" ], "ok" : 1 }
+
+dba5:PRIMARY> rs.status()
+{
+        "set" : "dba5",
+        "date" : ISODate("2014-10-30T20:31:45Z"),
+        "myState" : 1,
+        "members" : [
+                {
+                        "_id" : 0,
+                        "name" : "PLCOMP726:27001",
+                        "health" : 1,
+                        "state" : 1,
+                        "stateStr" : "PRIMARY",
+                        "uptime" : 1620,
+                        "optime" : Timestamp(1414701102, 1),
+                        "optimeDate" : ISODate("2014-10-30T20:31:42Z"),
+                        "electionTime" : Timestamp(1414700016, 2),
+                        "electionDate" : ISODate("2014-10-30T20:13:36Z"),
+                        "self" : true
+                },
+                {
+                        "_id" : 1,
+                        "name" : "PLCOMP726:27002",
+                        "health" : 1,
+                        "state" : 2,
+                        "stateStr" : "SECONDARY",
+                        "uptime" : 3,
+                        "optime" : Timestamp(1414701102, 1),
+                        "optimeDate" : ISODate("2014-10-30T20:31:42Z"),
+                        "lastHeartbeat" : ISODate("2014-10-30T20:31:44Z"),
+                        "lastHeartbeatRecv" : ISODate("2014-10-30T20:31:43Z"),
+                        "pingMs" : 1,
+                        "lastHeartbeatMessage" : "syncing to: PLCOMP726:27001",
+                        "syncingTo" : "PLCOMP726:27001"
+                },
+                {
+                        "_id" : 3,
+                        "name" : "PLCOMP726:27003",
+                        "health" : 1,
+                        "state" : 7,
+                        "stateStr" : "ARBITER",
+                        "uptime" : 3,
+                        "lastHeartbeat" : ISODate("2014-10-30T20:31:44Z"),
+                        "lastHeartbeatRecv" : ISODate("2014-10-30T20:31:44Z"),
+                        "pingMs" : 0
+                }
+        ],
+        "ok" : 1
+}
+
+You can see that the stat for the arbiter is 7.
 
