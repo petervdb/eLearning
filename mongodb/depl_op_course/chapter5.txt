@@ -1,0 +1,190 @@
+Homework 6.1
+------------
+mv /data/db /data/db_20141102
+mkdir /data/db
+mongo --nodb
+> config = { d0 : { smallfiles : "", noprealloc : "", nopreallocj : ""}, d1 : { smallfiles : "", noprealloc : "", nopreallocj : "" }, d2 : { smallfiles : "", noprealloc : "", nopreallocj : ""}};
+> cluster = new ShardingTest( { shards : config } );
+
+petervdb@uxplcomp726:/data> mongo --port 30999
+MongoDB shell version: 2.6.5
+connecting to: 127.0.0.1:30999/test
+mongos> sh.status()
+--- Sharding Status --- 
+  sharding version: {
+	"_id" : 1,
+	"version" : 4,
+	"minCompatibleVersion" : 4,
+	"currentVersion" : 5,
+	"clusterId" : ObjectId("54568526cf378476a93a6e1e")
+}
+  shards:
+	{  "_id" : "shard0000",  "host" : "localhost:30000",  "tags" : [ "LTS" ] }
+	{  "_id" : "shard0001",  "host" : "localhost:30001",  "tags" : [ "STS" ] }
+	{  "_id" : "shard0002",  "host" : "localhost:30002",  "tags" : [ "LTS" ] }
+  databases:
+	{  "_id" : "admin",  "partitioned" : false,  "primary" : "config" }
+	{  "_id" : "testDB",  "partitioned" : true,  "primary" : "shard0001" }
+		testDB.testColl
+			shard key: { "createdDate" : 1 }
+			chunks:
+				shard0002	81
+				shard0000	12
+				shard0001	121
+			too many chunks to print, use verbose if you want to force print
+			 tag: LTS  { "createdDate" : ISODate("2013-10-01T00:00:00Z") } -->> { "createdDate" : ISODate("2014-01-01T00:00:00Z") }
+			 tag: STS  { "createdDate" : ISODate("2014-01-01T00:00:00Z") } -->> { "createdDate" : ISODate("2014-05-01T00:00:00Z") }
+
+mongos> sh.status()
+--- Sharding Status --- 
+  sharding version: {
+	"_id" : 1,
+	"version" : 4,
+	"minCompatibleVersion" : 4,
+	"currentVersion" : 5,
+	"clusterId" : ObjectId("54568526cf378476a93a6e1e")
+}
+  shards:
+	{  "_id" : "shard0000",  "host" : "localhost:30000",  "tags" : [ "LTS" ] }
+	{  "_id" : "shard0001",  "host" : "localhost:30001",  "tags" : [ "STS" ] }
+	{  "_id" : "shard0002",  "host" : "localhost:30002",  "tags" : [ "LTS" ] }
+  databases:
+	{  "_id" : "admin",  "partitioned" : false,  "primary" : "config" }
+	{  "_id" : "testDB",  "partitioned" : true,  "primary" : "shard0001" }
+		testDB.testColl
+			shard key: { "createdDate" : 1 }
+			chunks:
+				shard0002	47
+				shard0000	46
+				shard0001	121
+			too many chunks to print, use verbose if you want to force print
+			 tag: LTS  { "createdDate" : ISODate("2013-10-01T00:00:00Z") } -->> { "createdDate" : ISODate("2014-01-01T00:00:00Z") }
+			 tag: STS  { "createdDate" : ISODate("2014-01-01T00:00:00Z") } -->> { "createdDate" : ISODate("2014-05-01T00:00:00Z") }
+
+
+mongos> sh.stopBalancer();
+Waiting for active hosts...
+Waiting for the balancer lock...
+Waiting again for active hosts after balancer is off...
+
+mongos> use config
+switched to db config
+mongos> db.tags.remove( {tag: "STS"});
+WriteResult({ "nRemoved" : 1 })
+mongos> db.tags.remove( {tag: "LTS"});
+WriteResult({ "nRemoved" : 1 })
+
+mongos> sh.addTagRange('testDB.testColl', {createdDate : ISODate("2014-02-01")}, { createdDate : ISODate("2014-05-01")}, "STS")
+mongos> sh.addTagRange('testDB.testColl', {createdDate : ISODate("2013-10-01")}, { createdDate : ISODate("2014-02-01")}, "LTS")
+mongos> 
+mongos> 
+mongos> sh.status();
+--- Sharding Status --- 
+  sharding version: {
+	"_id" : 1,
+	"version" : 4,
+	"minCompatibleVersion" : 4,
+	"currentVersion" : 5,
+	"clusterId" : ObjectId("54568526cf378476a93a6e1e")
+}
+  shards:
+	{  "_id" : "shard0000",  "host" : "localhost:30000",  "tags" : [ "LTS" ] }
+	{  "_id" : "shard0001",  "host" : "localhost:30001",  "tags" : [ "STS" ] }
+	{  "_id" : "shard0002",  "host" : "localhost:30002",  "tags" : [ "LTS" ] }
+  databases:
+	{  "_id" : "admin",  "partitioned" : false,  "primary" : "config" }
+	{  "_id" : "testDB",  "partitioned" : true,  "primary" : "shard0001" }
+		testDB.testColl
+			shard key: { "createdDate" : 1 }
+			chunks:
+				shard0002	47
+				shard0000	46
+				shard0001	121
+			too many chunks to print, use verbose if you want to force print
+			 tag: LTS  { "createdDate" : ISODate("2013-10-01T00:00:00Z") } -->> { "createdDate" : ISODate("2014-02-01T00:00:00Z") }
+			 tag: STS  { "createdDate" : ISODate("2014-02-01T00:00:00Z") } -->> { "createdDate" : ISODate("2014-05-01T00:00:00Z") }
+	{  "_id" : "test",  "partitioned" : false,  "primary" : "shard0001" }
+
+mongos> sh.startBalancer();
+mongos> sh.status();
+--- Sharding Status --- 
+  sharding version: {
+	"_id" : 1,
+	"version" : 4,
+	"minCompatibleVersion" : 4,
+	"currentVersion" : 5,
+	"clusterId" : ObjectId("54568526cf378476a93a6e1e")
+}
+  shards:
+	{  "_id" : "shard0000",  "host" : "localhost:30000",  "tags" : [ "LTS" ] }
+	{  "_id" : "shard0001",  "host" : "localhost:30001",  "tags" : [ "STS" ] }
+	{  "_id" : "shard0002",  "host" : "localhost:30002",  "tags" : [ "LTS" ] }
+  databases:
+	{  "_id" : "admin",  "partitioned" : false,  "primary" : "config" }
+	{  "_id" : "testDB",  "partitioned" : true,  "primary" : "shard0001" }
+		testDB.testColl
+			shard key: { "createdDate" : 1 }
+			chunks:
+				shard0002	47
+				shard0000	48
+				shard0001	119
+			too many chunks to print, use verbose if you want to force print
+			 tag: LTS  { "createdDate" : ISODate("2013-10-01T00:00:00Z") } -->> { "createdDate" : ISODate("2014-02-01T00:00:00Z") }
+			 tag: STS  { "createdDate" : ISODate("2014-02-01T00:00:00Z") } -->> { "createdDate" : ISODate("2014-05-01T00:00:00Z") }
+	{  "_id" : "test",  "partitioned" : false,  "primary" : "shard0001" }
+
+mongos> sh.status();
+--- Sharding Status --- 
+  sharding version: {
+	"_id" : 1,
+	"version" : 4,
+	"minCompatibleVersion" : 4,
+	"currentVersion" : 5,
+	"clusterId" : ObjectId("54568526cf378476a93a6e1e")
+}
+  shards:
+	{  "_id" : "shard0000",  "host" : "localhost:30000",  "tags" : [ "LTS" ] }
+	{  "_id" : "shard0001",  "host" : "localhost:30001",  "tags" : [ "STS" ] }
+	{  "_id" : "shard0002",  "host" : "localhost:30002",  "tags" : [ "LTS" ] }
+  databases:
+	{  "_id" : "admin",  "partitioned" : false,  "primary" : "config" }
+	{  "_id" : "testDB",  "partitioned" : true,  "primary" : "shard0001" }
+		testDB.testColl
+			shard key: { "createdDate" : 1 }
+			chunks:
+				shard0002	49
+				shard0000	49
+				shard0001	116
+			too many chunks to print, use verbose if you want to force print
+			 tag: LTS  { "createdDate" : ISODate("2013-10-01T00:00:00Z") } -->> { "createdDate" : ISODate("2014-02-01T00:00:00Z") }
+			 tag: STS  { "createdDate" : ISODate("2014-02-01T00:00:00Z") } -->> { "createdDate" : ISODate("2014-05-01T00:00:00Z") }
+	{  "_id" : "test",  "partitioned" : false,  "primary" : "shard0001" }
+
+mongos> sh.status();
+--- Sharding Status --- 
+  sharding version: {
+	"_id" : 1,
+	"version" : 4,
+	"minCompatibleVersion" : 4,
+	"currentVersion" : 5,
+	"clusterId" : ObjectId("54568526cf378476a93a6e1e")
+}
+  shards:
+	{  "_id" : "shard0000",  "host" : "localhost:30000",  "tags" : [ "LTS" ] }
+	{  "_id" : "shard0001",  "host" : "localhost:30001",  "tags" : [ "STS" ] }
+	{  "_id" : "shard0002",  "host" : "localhost:30002",  "tags" : [ "LTS" ] }
+  databases:
+	{  "_id" : "admin",  "partitioned" : false,  "primary" : "config" }
+	{  "_id" : "testDB",  "partitioned" : true,  "primary" : "shard0001" }
+		testDB.testColl
+			shard key: { "createdDate" : 1 }
+			chunks:
+				shard0002	62
+				shard0000	62
+				shard0001	90
+			too many chunks to print, use verbose if you want to force print
+			 tag: LTS  { "createdDate" : ISODate("2013-10-01T00:00:00Z") } -->> { "createdDate" : ISODate("2014-02-01T00:00:00Z") }
+			 tag: STS  { "createdDate" : ISODate("2014-02-01T00:00:00Z") } -->> { "createdDate" : ISODate("2014-05-01T00:00:00Z") }
+	{  "_id" : "test",  "partitioned" : false,  "primary" : "shard0001" }
+
+
