@@ -187,4 +187,733 @@ mongos> sh.status();
 			 tag: STS  { "createdDate" : ISODate("2014-02-01T00:00:00Z") } -->> { "createdDate" : ISODate("2014-05-01T00:00:00Z") }
 	{  "_id" : "test",  "partitioned" : false,  "primary" : "shard0001" }
 
+Homework 6.2
+------------
+rm -r /data/db
+mkdir /data/db
+petervdb@uxplcomp726:/data> mongo --nodb
+MongoDB shell version: 2.6.5
+> config = { d0 : { smallfiles : "", noprealloc : "", nopreallocj : ""}, d1 : { smallfiles : "", noprealloc : "", nopreallocj : "" } };
+{
+	"d0" : {
+		"smallfiles" : "",
+		"noprealloc" : "",
+		"nopreallocj" : ""
+	},
+	"d1" : {
+		"smallfiles" : "",
+		"noprealloc" : "",
+		"nopreallocj" : ""
+	}
+}
+
+> cluster = new ShardingTest( { shards: config } );
+Resetting db path '/data/db/test0'
+2014-11-02T20:56:14.169+0100 shell: started program mongod --port 30000 --dbpath /data/db/test0 --smallfiles --noprealloc --nopreallocj --setParameter enableTestCommands=1
+2014-11-02T20:56:14.170+0100 warning: Failed to connect to 127.0.0.1:30000, reason: errno:111 Connection refused
+ m30000| note: noprealloc may hurt performance in many applications
+ m30000| 2014-11-02T20:56:14.190+0100 [initandlisten] MongoDB starting : pid=14172 port=30000 dbpath=/data/db/test0 64-bit host=uxplcomp726.jetair.be
+ m30000| 2014-11-02T20:56:14.190+0100 [initandlisten] db version v2.6.5
+ m30000| 2014-11-02T20:56:14.190+0100 [initandlisten] git version: e99d4fcb4279c0279796f237aa92fe3b64560bf6
+ m30000| 2014-11-02T20:56:14.190+0100 [initandlisten] build info: Linux build8.nj1.10gen.cc 2.6.32-431.3.1.el6.x86_64 #1 SMP Fri Jan 3 21:39:27 UTC 2014 x86_64 BOOST_LIB_VERSION=1_49
+ m30000| 2014-11-02T20:56:14.190+0100 [initandlisten] allocator: tcmalloc
+ m30000| 2014-11-02T20:56:14.190+0100 [initandlisten] options: { net: { port: 30000 }, nopreallocj: true, setParameter: { enableTestCommands: "1" }, storage: { dbPath: "/data/db/test0", preallocDataFiles: false, smallFiles: true } }
+ m30000| 2014-11-02T20:56:14.191+0100 [initandlisten] journal dir=/data/db/test0/journal
+ m30000| 2014-11-02T20:56:14.191+0100 [initandlisten] recover : no journal files present, no recovery needed
+ m30000| 2014-11-02T20:56:14.198+0100 [initandlisten] allocating new ns file /data/db/test0/local.ns, filling with zeroes...
+ m30000| 2014-11-02T20:56:14.370+0100 [FileAllocator] allocating new datafile /data/db/test0/local.0, filling with zeroes...
+ m30000| 2014-11-02T20:56:14.370+0100 [FileAllocator] creating directory /data/db/test0/_tmp
+Resetting db path '/data/db/test1'
+2014-11-02T20:56:14.372+0100 shell: started program mongod --port 30001 --dbpath /data/db/test1 --smallfiles --noprealloc --nopreallocj --setParameter enableTestCommands=1
+2014-11-02T20:56:14.373+0100 warning: Failed to connect to 127.0.0.1:30001, reason: errno:111 Connection refused
+ m30000| 2014-11-02T20:56:14.373+0100 [FileAllocator] done allocating datafile /data/db/test0/local.0, size: 16MB,  took 0 secs
+ m30000| 2014-11-02T20:56:14.374+0100 [initandlisten] build index on: local.startup_log properties: { v: 1, key: { _id: 1 }, name: "_id_", ns: "local.startup_log" }
+ m30000| 2014-11-02T20:56:14.374+0100 [initandlisten] 	 added index to empty collection
+ m30000| 2014-11-02T20:56:14.375+0100 [initandlisten] command local.$cmd command: create { create: "startup_log", size: 10485760, capped: true } ntoreturn:1 keyUpdates:0 numYields:0  reslen:37 176ms
+ m30000| 2014-11-02T20:56:14.375+0100 [initandlisten] waiting for connections on port 30000
+ m30000| 2014-11-02T20:56:14.375+0100 [initandlisten] connection accepted from 127.0.0.1:52011 #1 (1 connection now open)
+ m30001| note: noprealloc may hurt performance in many applications
+ m30001| 2014-11-02T20:56:14.391+0100 [initandlisten] MongoDB starting : pid=14186 port=30001 dbpath=/data/db/test1 64-bit host=uxplcomp726.jetair.be
+ m30001| 2014-11-02T20:56:14.391+0100 [initandlisten] db version v2.6.5
+ m30001| 2014-11-02T20:56:14.391+0100 [initandlisten] git version: e99d4fcb4279c0279796f237aa92fe3b64560bf6
+ m30001| 2014-11-02T20:56:14.391+0100 [initandlisten] build info: Linux build8.nj1.10gen.cc 2.6.32-431.3.1.el6.x86_64 #1 SMP Fri Jan 3 21:39:27 UTC 2014 x86_64 BOOST_LIB_VERSION=1_49
+ m30001| 2014-11-02T20:56:14.391+0100 [initandlisten] allocator: tcmalloc
+ m30001| 2014-11-02T20:56:14.391+0100 [initandlisten] options: { net: { port: 30001 }, nopreallocj: true, setParameter: { enableTestCommands: "1" }, storage: { dbPath: "/data/db/test1", preallocDataFiles: false, smallFiles: true } }
+ m30001| 2014-11-02T20:56:14.398+0100 [initandlisten] journal dir=/data/db/test1/journal
+ m30001| 2014-11-02T20:56:14.398+0100 [initandlisten] recover : no journal files present, no recovery needed
+ m30001| 2014-11-02T20:56:14.402+0100 [initandlisten] allocating new ns file /data/db/test1/local.ns, filling with zeroes...
+ m30001| 2014-11-02T20:56:14.545+0100 [FileAllocator] allocating new datafile /data/db/test1/local.0, filling with zeroes...
+ m30001| 2014-11-02T20:56:14.545+0100 [FileAllocator] creating directory /data/db/test1/_tmp
+ m30001| 2014-11-02T20:56:14.547+0100 [FileAllocator] done allocating datafile /data/db/test1/local.0, size: 16MB,  took 0.001 secs
+ m30001| 2014-11-02T20:56:14.548+0100 [initandlisten] build index on: local.startup_log properties: { v: 1, key: { _id: 1 }, name: "_id_", ns: "local.startup_log" }
+ m30001| 2014-11-02T20:56:14.548+0100 [initandlisten] 	 added index to empty collection
+ m30001| 2014-11-02T20:56:14.548+0100 [initandlisten] command local.$cmd command: create { create: "startup_log", size: 10485760, capped: true } ntoreturn:1 keyUpdates:0 numYields:0  reslen:37 146ms
+ m30001| 2014-11-02T20:56:14.548+0100 [initandlisten] waiting for connections on port 30001
+ m30001| 2014-11-02T20:56:14.574+0100 [initandlisten] connection accepted from 127.0.0.1:50454 #1 (1 connection now open)
+"localhost:30000"
+ m30000| 2014-11-02T20:56:14.574+0100 [initandlisten] connection accepted from 127.0.0.1:52014 #2 (2 connections now open)
+ShardingTest test :
+{
+	"config" : "localhost:30000",
+	"shards" : [
+		connection to localhost:30000,
+		connection to localhost:30001
+	]
+}
+2014-11-02T20:56:14.576+0100 shell: started program mongos --port 30999 --configdb localhost:30000 --chunkSize 50 --setParameter enableTestCommands=1
+2014-11-02T20:56:14.576+0100 warning: Failed to connect to 127.0.0.1:30999, reason: errno:111 Connection refused
+ m30999| 2014-11-02T20:56:14.586+0100 warning: running with 1 config server should be done only for testing purposes and is not recommended for production
+ m30999| 2014-11-02T20:56:14.588+0100 [mongosMain] MongoS version 2.6.5 starting: pid=14204 port=30999 64-bit host=uxplcomp726.jetair.be (--help for usage)
+ m30999| 2014-11-02T20:56:14.588+0100 [mongosMain] db version v2.6.5
+ m30999| 2014-11-02T20:56:14.588+0100 [mongosMain] git version: e99d4fcb4279c0279796f237aa92fe3b64560bf6
+ m30999| 2014-11-02T20:56:14.588+0100 [mongosMain] build info: Linux build8.nj1.10gen.cc 2.6.32-431.3.1.el6.x86_64 #1 SMP Fri Jan 3 21:39:27 UTC 2014 x86_64 BOOST_LIB_VERSION=1_49
+ m30999| 2014-11-02T20:56:14.588+0100 [mongosMain] allocator: tcmalloc
+ m30999| 2014-11-02T20:56:14.588+0100 [mongosMain] options: { net: { port: 30999 }, setParameter: { enableTestCommands: "1" }, sharding: { chunkSize: 50, configDB: "localhost:30000" } }
+ m30000| 2014-11-02T20:56:14.589+0100 [initandlisten] connection accepted from 127.0.0.1:52016 #3 (3 connections now open)
+ m30000| 2014-11-02T20:56:14.589+0100 [initandlisten] connection accepted from 127.0.0.1:52017 #4 (4 connections now open)
+ m30000| 2014-11-02T20:56:14.589+0100 [conn3] CMD fsync: sync:1 lock:0
+ m30000| 2014-11-02T20:56:14.592+0100 [initandlisten] connection accepted from 127.0.0.1:52018 #5 (5 connections now open)
+ m30999| 2014-11-02T20:56:14.593+0100 [LockPinger] creating distributed lock ping thread for localhost:30000 and process uxplcomp726.jetair.be:30999:1414958174:1804289383 (sleeping for 30000ms)
+ m30000| 2014-11-02T20:56:14.593+0100 [conn5] allocating new ns file /data/db/test0/config.ns, filling with zeroes...
+2014-11-02T20:56:14.777+0100 warning: Failed to connect to 127.0.0.1:30999, reason: errno:111 Connection refused
+2014-11-02T20:56:14.978+0100 warning: Failed to connect to 127.0.0.1:30999, reason: errno:111 Connection refused
+2014-11-02T20:56:15.178+0100 warning: Failed to connect to 127.0.0.1:30999, reason: errno:111 Connection refused
+2014-11-02T20:56:15.379+0100 warning: Failed to connect to 127.0.0.1:30999, reason: errno:111 Connection refused
+2014-11-02T20:56:15.580+0100 warning: Failed to connect to 127.0.0.1:30999, reason: errno:111 Connection refused
+ m30000| 2014-11-02T20:56:15.747+0100 [FileAllocator] allocating new datafile /data/db/test0/config.0, filling with zeroes...
+ m30000| 2014-11-02T20:56:15.750+0100 [FileAllocator] done allocating datafile /data/db/test0/config.0, size: 16MB,  took 0.003 secs
+ m30000| 2014-11-02T20:56:15.751+0100 [conn5] build index on: config.locks properties: { v: 1, key: { _id: 1 }, name: "_id_", ns: "config.locks" }
+ m30000| 2014-11-02T20:56:15.751+0100 [conn5] 	 added index to empty collection
+ m30000| 2014-11-02T20:56:15.751+0100 [conn5] insert config.locks ninserted:1 keyUpdates:0 numYields:0 locks(micros) w:1158134 1158ms
+ m30000| 2014-11-02T20:56:15.752+0100 [conn3] build index on: config.lockpings properties: { v: 1, key: { _id: 1 }, name: "_id_", ns: "config.lockpings" }
+ m30000| 2014-11-02T20:56:15.752+0100 [conn3] 	 added index to empty collection
+ m30999| 2014-11-02T20:56:15.767+0100 [LockPinger] cluster localhost:30000 pinged successfully at Sun Nov  2 20:56:14 2014 by distributed lock pinger 'localhost:30000/uxplcomp726.jetair.be:30999:1414958174:1804289383', sleeping for 30000ms
+ m30999| 2014-11-02T20:56:15.768+0100 [mongosMain] distributed lock 'configUpgrade/uxplcomp726.jetair.be:30999:1414958174:1804289383' acquired, ts : 54568c5e6a911dc15c0aa7e5
+ m30999| 2014-11-02T20:56:15.768+0100 [mongosMain] starting upgrade of config server from v0 to v5
+ m30999| 2014-11-02T20:56:15.768+0100 [mongosMain] starting next upgrade step from v0 to v5
+ m30999| 2014-11-02T20:56:15.769+0100 [mongosMain] about to log new metadata event: { _id: "uxplcomp726.jetair.be-2014-11-02T19:56:15-54568c5f6a911dc15c0aa7e6", server: "uxplcomp726.jetair.be", clientAddr: "N/A", time: new Date(1414958175768), what: "starting upgrade of config database", ns: "config.version", details: { from: 0, to: 5 } }
+ m30000| 2014-11-02T20:56:15.769+0100 [conn3] build index on: config.changelog properties: { v: 1, key: { _id: 1 }, name: "_id_", ns: "config.changelog" }
+ m30000| 2014-11-02T20:56:15.769+0100 [conn3] 	 added index to empty collection
+ m30000| 2014-11-02T20:56:15.769+0100 [initandlisten] connection accepted from 127.0.0.1:52024 #6 (6 connections now open)
+ m30999| 2014-11-02T20:56:15.769+0100 [mongosMain] creating WriteBackListener for: localhost:30000 serverID: 000000000000000000000000
+ m30000| 2014-11-02T20:56:15.769+0100 [conn6] first cluster operation detected, adding sharding hook to enable versioning and authentication to remote servers
+ m30000| 2014-11-02T20:56:15.770+0100 [conn6] CMD fsync: sync:1 lock:0
+2014-11-02T20:56:15.780+0100 warning: Failed to connect to 127.0.0.1:30999, reason: errno:111 Connection refused
+ m30999| 2014-11-02T20:56:15.834+0100 [mongosMain] writing initial config version at v5
+ m30000| 2014-11-02T20:56:15.834+0100 [conn6] CMD fsync: sync:1 lock:0
+ m30000| 2014-11-02T20:56:15.853+0100 [conn6] build index on: config.version properties: { v: 1, key: { _id: 1 }, name: "_id_", ns: "config.version" }
+ m30000| 2014-11-02T20:56:15.853+0100 [conn6] 	 added index to empty collection
+ m30999| 2014-11-02T20:56:15.854+0100 [mongosMain] about to log new metadata event: { _id: "uxplcomp726.jetair.be-2014-11-02T19:56:15-54568c5f6a911dc15c0aa7e8", server: "uxplcomp726.jetair.be", clientAddr: "N/A", time: new Date(1414958175854), what: "finished upgrade of config database", ns: "config.version", details: { from: 0, to: 5 } }
+ m30000| 2014-11-02T20:56:15.854+0100 [conn6] CMD fsync: sync:1 lock:0
+ m30999| 2014-11-02T20:56:15.857+0100 [mongosMain] upgrade of config server to v5 successful
+ m30999| 2014-11-02T20:56:15.858+0100 [mongosMain] distributed lock 'configUpgrade/uxplcomp726.jetair.be:30999:1414958174:1804289383' unlocked. 
+ m30000| 2014-11-02T20:56:15.858+0100 [conn6] CMD fsync: sync:1 lock:0
+ m30000| 2014-11-02T20:56:15.860+0100 [conn6] build index on: config.settings properties: { v: 1, key: { _id: 1 }, name: "_id_", ns: "config.settings" }
+ m30000| 2014-11-02T20:56:15.860+0100 [conn6] 	 added index to empty collection
+ m30000| 2014-11-02T20:56:15.860+0100 [conn6] CMD fsync: sync:1 lock:0
+ m30000| 2014-11-02T20:56:15.866+0100 [conn6] build index on: config.chunks properties: { v: 1, key: { _id: 1 }, name: "_id_", ns: "config.chunks" }
+ m30000| 2014-11-02T20:56:15.866+0100 [conn6] 	 added index to empty collection
+ m30000| 2014-11-02T20:56:15.866+0100 [conn6] build index on: config.chunks properties: { v: 1, unique: true, key: { ns: 1, min: 1 }, name: "ns_1_min_1", ns: "config.chunks" }
+ m30000| 2014-11-02T20:56:15.866+0100 [conn6] 	 added index to empty collection
+ m30000| 2014-11-02T20:56:15.867+0100 [conn6] CMD fsync: sync:1 lock:0
+ m30000| 2014-11-02T20:56:15.872+0100 [conn6] build index on: config.chunks properties: { v: 1, unique: true, key: { ns: 1, shard: 1, min: 1 }, name: "ns_1_shard_1_min_1", ns: "config.chunks" }
+ m30000| 2014-11-02T20:56:15.872+0100 [conn6] 	 added index to empty collection
+ m30000| 2014-11-02T20:56:15.872+0100 [conn6] CMD fsync: sync:1 lock:0
+ m30000| 2014-11-02T20:56:15.954+0100 [conn6] build index on: config.chunks properties: { v: 1, unique: true, key: { ns: 1, lastmod: 1 }, name: "ns_1_lastmod_1", ns: "config.chunks" }
+ m30000| 2014-11-02T20:56:15.954+0100 [conn6] 	 added index to empty collection
+ m30000| 2014-11-02T20:56:15.954+0100 [conn6] CMD fsync: sync:1 lock:0
+2014-11-02T20:56:15.981+0100 warning: Failed to connect to 127.0.0.1:30999, reason: errno:111 Connection refused
+ m30000| 2014-11-02T20:56:15.990+0100 [conn6] build index on: config.shards properties: { v: 1, key: { _id: 1 }, name: "_id_", ns: "config.shards" }
+ m30000| 2014-11-02T20:56:15.990+0100 [conn6] 	 added index to empty collection
+ m30000| 2014-11-02T20:56:15.991+0100 [conn6] build index on: config.shards properties: { v: 1, unique: true, key: { host: 1 }, name: "host_1", ns: "config.shards" }
+ m30000| 2014-11-02T20:56:15.991+0100 [conn6] 	 added index to empty collection
+ m30000| 2014-11-02T20:56:15.991+0100 [conn6] CMD fsync: sync:1 lock:0
+ m30000| 2014-11-02T20:56:16.028+0100 [conn6] build index on: config.locks properties: { v: 1, unique: true, key: { ts: 1 }, name: "ts_1", ns: "config.locks" }
+ m30000| 2014-11-02T20:56:16.028+0100 [conn6] 	 building index using bulk method
+ m30000| 2014-11-02T20:56:16.028+0100 [conn6] build index done.  scanned 1 total records. 0 secs
+ m30000| 2014-11-02T20:56:16.028+0100 [conn6] CMD fsync: sync:1 lock:0
+ m30000| 2014-11-02T20:56:16.051+0100 [conn6] build index on: config.locks properties: { v: 1, key: { state: 1, process: 1 }, name: "state_1_process_1", ns: "config.locks" }
+ m30000| 2014-11-02T20:56:16.052+0100 [conn6] 	 building index using bulk method
+ m30000| 2014-11-02T20:56:16.052+0100 [conn6] build index done.  scanned 1 total records. 0 secs
+ m30000| 2014-11-02T20:56:16.052+0100 [conn6] CMD fsync: sync:1 lock:0
+ m30000| 2014-11-02T20:56:16.069+0100 [conn6] build index on: config.lockpings properties: { v: 1, key: { ping: 1 }, name: "ping_1", ns: "config.lockpings" }
+ m30000| 2014-11-02T20:56:16.069+0100 [conn6] 	 building index using bulk method
+ m30000| 2014-11-02T20:56:16.069+0100 [conn6] build index done.  scanned 1 total records. 0 secs
+ m30999| 2014-11-02T20:56:16.069+0100 [mongosMain] scoped connection to localhost:30000 not being returned to the pool
+ m30999| 2014-11-02T20:56:16.069+0100 [Balancer] about to contact config servers and shards
+ m30999| 2014-11-02T20:56:16.069+0100 [mongosMain] waiting for connections on port 30999
+ m30000| 2014-11-02T20:56:16.069+0100 [conn3] end connection 127.0.0.1:52016 (5 connections now open)
+ m30999| 2014-11-02T20:56:16.069+0100 [Balancer] config servers and shards contacted successfully
+ m30999| 2014-11-02T20:56:16.069+0100 [Balancer] balancer id: uxplcomp726.jetair.be:30999 started at Nov  2 20:56:16
+ m30000| 2014-11-02T20:56:16.070+0100 [conn6] build index on: config.mongos properties: { v: 1, key: { _id: 1 }, name: "_id_", ns: "config.mongos" }
+ m30000| 2014-11-02T20:56:16.070+0100 [conn6] 	 added index to empty collection
+ m30000| 2014-11-02T20:56:16.070+0100 [initandlisten] connection accepted from 127.0.0.1:52027 #7 (6 connections now open)
+ m30999| 2014-11-02T20:56:16.072+0100 [Balancer] distributed lock 'balancer/uxplcomp726.jetair.be:30999:1414958174:1804289383' acquired, ts : 54568c606a911dc15c0aa7ea
+ m30999| 2014-11-02T20:56:16.072+0100 [Balancer] distributed lock 'balancer/uxplcomp726.jetair.be:30999:1414958174:1804289383' unlocked. 
+ m30999| 2014-11-02T20:56:16.182+0100 [mongosMain] connection accepted from 127.0.0.1:46095 #1 (1 connection now open)
+ShardingTest undefined going to add shard : localhost:30000
+ m30999| 2014-11-02T20:56:16.184+0100 [conn1] couldn't find database [admin] in config db
+ m30000| 2014-11-02T20:56:16.184+0100 [conn6] CMD fsync: sync:1 lock:0
+ m30000| 2014-11-02T20:56:16.513+0100 [conn6] command admin.$cmd command: fsync { fsync: true } ntoreturn:1 keyUpdates:0 numYields:0 locks(micros) W:325848 reslen:51 329ms
+ m30000| 2014-11-02T20:56:16.514+0100 [conn6] build index on: config.databases properties: { v: 1, key: { _id: 1 }, name: "_id_", ns: "config.databases" }
+ m30000| 2014-11-02T20:56:16.514+0100 [conn6] 	 added index to empty collection
+ m30999| 2014-11-02T20:56:16.514+0100 [conn1] 	 put [admin] on: config:localhost:30000
+ m30999| 2014-11-02T20:56:16.515+0100 [conn1] going to add shard: { _id: "shard0000", host: "localhost:30000" }
+ m30000| 2014-11-02T20:56:16.515+0100 [conn6] CMD fsync: sync:1 lock:0
+ m30999| 2014-11-02T20:56:16.526+0100 [conn1] about to log metadata event: { _id: "uxplcomp726.jetair.be-2014-11-02T19:56:16-54568c606a911dc15c0aa7eb", server: "uxplcomp726.jetair.be", clientAddr: "N/A", time: new Date(1414958176526), what: "addShard", ns: "", details: { name: "shard0000", host: "localhost:30000" } }
+ m30000| 2014-11-02T20:56:16.526+0100 [conn6] CMD fsync: sync:1 lock:0
+{ "shardAdded" : "shard0000", "ok" : 1 }
+ShardingTest undefined going to add shard : localhost:30001
+ m30001| 2014-11-02T20:56:16.538+0100 [initandlisten] connection accepted from 127.0.0.1:50470 #2 (2 connections now open)
+ m30999| 2014-11-02T20:56:16.539+0100 [conn1] going to add shard: { _id: "shard0001", host: "localhost:30001" }
+ m30000| 2014-11-02T20:56:16.539+0100 [conn6] CMD fsync: sync:1 lock:0
+ m30999| 2014-11-02T20:56:16.549+0100 [conn1] about to log metadata event: { _id: "uxplcomp726.jetair.be-2014-11-02T19:56:16-54568c606a911dc15c0aa7ec", server: "uxplcomp726.jetair.be", clientAddr: "N/A", time: new Date(1414958176549), what: "addShard", ns: "", details: { name: "shard0001", host: "localhost:30001" } }
+ m30000| 2014-11-02T20:56:16.549+0100 [conn6] CMD fsync: sync:1 lock:0
+{ "shardAdded" : "shard0001", "ok" : 1 }
+{
+	"_startTime" : ISODate("2014-11-02T19:56:14.165Z"),
+	"_testName" : "test",
+	"_otherParams" : {
+		"extraOptions" : {
+			
+		},
+		"nopreallocj" : undefined,
+		"rs" : undefined,
+		"chunksize" : undefined,
+		"d0" : {
+			"smallfiles" : "",
+			"noprealloc" : "",
+			"nopreallocj" : ""
+		},
+		"d1" : {
+			"smallfiles" : "",
+			"noprealloc" : "",
+			"nopreallocj" : ""
+		}
+	},
+	"pathOpts" : {
+		"testName" : "test"
+	},
+	"_alldbpaths" : [
+		"test0",
+		"test1"
+	],
+	"_connections" : [
+		connection to localhost:30000,
+		connection to localhost:30001
+	],
+	"_shardServers" : [
+		connection to localhost:30000,
+		connection to localhost:30001
+	],
+	"_rs" : [
+		null,
+		null
+	],
+	"_rsObjects" : [
+		null,
+		null
+	],
+	"shard0" : connection to localhost:30000,
+	"d0" : connection to localhost:30000,
+	"shard1" : connection to localhost:30001,
+	"d1" : connection to localhost:30001,
+	"_configServers" : [
+		connection to localhost:30000
+	],
+	"_configNames" : [
+		"localhost:30000"
+	],
+	"config0" : connection to localhost:30000,
+	"c0" : connection to localhost:30000,
+	"_configDB" : "localhost:30000",
+	"_configConnection" : connection to localhost:30000,
+	"_mongos" : [
+		connection to localhost:30999
+	],
+	"_mongoses" : [
+		connection to localhost:30999
+	],
+	"s" : connection to localhost:30999,
+	"s0" : connection to localhost:30999,
+	"admin" : admin,
+	"config" : config,
+	"_shardNames" : [
+		"shard0000",
+		"shard0001"
+	],
+	"getRSEntry" : function ( setName ){
+    for ( var i=0; i<this._rs.length; i++ )
+        if ( this._rs[i].setName == setName )
+            return this._rs[i];
+    throw "can't find rs: " + setName;
+},
+	"getConfigIndex" : function ( config ){
+
+    // Assume config is a # if not a conn object
+    if( ! isObject( config ) ) config = getHostName() + ":" + config
+
+    for( var i = 0; i < this._configServers.length; i++ ){
+        if( connectionURLTheSame( this._configServers[i], config ) ) return i
+    }
+
+    return -1
+},
+	"getDB" : function ( name ){
+    return this.s.getDB( name );
+},
+	"getServerName" : function ( dbname ){
+    var x = this.config.databases.findOne( { _id : "" + dbname } );
+    if ( x )
+        return x.primary;
+    this.config.databases.find().forEach( printjson );
+    throw "couldn't find dbname: " + dbname + " total: " + this.config.databases.count();
+},
+	"getNonPrimaries" : function ( dbname ){
+    var x = this.config.databases.findOne( { _id : dbname } );
+    if ( ! x ){
+        this.config.databases.find().forEach( printjson );
+        throw "couldn't find dbname: " + dbname + " total: " + this.config.databases.count();
+    }
+
+    return this.config.shards.find( { _id : { $ne : x.primary } } ).map( function(z){ return z._id; } )
+},
+	"getConnNames" : function (){
+    var names = [];
+    for ( var i=0; i<this._connections.length; i++ ){
+        names.push( this._connections[i].name );
+    }
+    return names;
+},
+	"getServer" : function ( dbname ){
+    var name = this.getServerName( dbname );
+
+    var x = this.config.shards.findOne( { _id : name } );
+    if ( x )
+        name = x.host;
+
+    var rsName = null;
+    if ( name.indexOf( "/" ) > 0 )
+	rsName = name.substring( 0 , name.indexOf( "/" ) );
+
+    for ( var i=0; i<this._connections.length; i++ ){
+        var c = this._connections[i];
+        if ( connectionURLTheSame( name , c.name ) ||
+             connectionURLTheSame( rsName , c.name ) )
+            return c;
+    }
+
+    throw "can't find server for: " + dbname + " name:" + name;
+
+},
+	"normalize" : function ( x ){
+    var z = this.config.shards.findOne( { host : x } );
+    if ( z )
+        return z._id;
+    return x;
+},
+	"getOther" : function ( one ){
+    if ( this._connections.length < 2 )
+        throw "getOther only works with 2 servers";
+
+    if ( one._mongo )
+        one = one._mongo
+
+    for( var i = 0; i < this._connections.length; i++ ){
+        if( this._connections[i] != one ) return this._connections[i]
+    }
+
+    return null
+},
+	"getAnother" : function ( one ){
+    if(this._connections.length < 2)
+    	throw "getAnother() only works with multiple servers";
+
+	if ( one._mongo )
+        one = one._mongo
+
+    for(var i = 0; i < this._connections.length; i++){
+    	if(this._connections[i] == one)
+    		return this._connections[(i + 1) % this._connections.length];
+    }
+},
+	"getFirstOther" : function ( one ){
+    for ( var i=0; i<this._connections.length; i++ ){
+        if ( this._connections[i] != one )
+        return this._connections[i];
+    }
+    throw "impossible";
+},
+	"stop" : function (){
+    for ( var i=0; i<this._mongos.length; i++ ){
+        stopMongoProgram( 31000 - i - 1 );
+    }
+    for ( var i=0; i<this._connections.length; i++){
+        stopMongod( 30000 + i );
+    }
+    if ( this._rs ){
+        for ( var i=0; i<this._rs.length; i++ ){
+            if( this._rs[i] ) this._rs[i].test.stopSet( 15 );
+        }
+    }
+    if( this._otherParams.separateConfig ){
+        for ( var i=0; i<this._configServers.length; i++ ){
+            MongoRunner.stopMongod( this._configServers[i] )
+        }
+    }
+    if ( this._alldbpaths ){
+        for( i=0; i<this._alldbpaths.length; i++ ){
+            resetDbpath( MongoRunner.dataPath + this._alldbpaths[i] );
+        }
+    }
+
+    var timeMillis = new Date().getTime() - this._startTime.getTime();
+
+    print('*** ShardingTest ' + this._testName + " completed successfully in " + ( timeMillis / 1000 ) + " seconds ***");
+},
+	"adminCommand" : function (cmd){
+    var res = this.admin.runCommand( cmd );
+    if ( res && res.ok == 1 )
+        return true;
+
+    throw "command " + tojson( cmd ) + " failed: " + tojson( res );
+},
+	"_rangeToString" : function (r){
+    return tojsononeline( r.min ) + " -> " + tojsononeline( r.max );
+},
+	"printChangeLog" : function (){
+    var s = this;
+    this.config.changelog.find().forEach(
+        function(z){
+            var msg = z.server + "\t" + z.time + "\t" + z.what;
+            for ( i=z.what.length; i<15; i++ )
+                msg += " ";
+            msg += " " + z.ns + "\t";
+            if ( z.what == "split" ){
+                msg += s._rangeToString( z.details.before ) + " -->> (" + s._rangeToString( z.details.left ) + "),(" + s._rangeToString( z.details.right ) + ")";
+            }
+            else if (z.what == "multi-split" ){
+                msg += s._rangeToString( z.details.before ) + "  -->> (" + z.details.number + "/" + z.details.of + " " + s._rangeToString( z.details.chunk ) + ")";
+            }
+            else {
+                msg += tojsononeline( z.details );
+            }
+
+            print( "ShardingTest " + msg )
+        }
+    );
+
+},
+	"getChunksString" : function ( ns ){
+    var q = {}
+    if ( ns )
+        q.ns = ns;
+
+    var s = "";
+    this.config.chunks.find( q ).sort( { ns : 1 , min : 1 } ).forEach(
+        function(z){
+            s +=  "  " + z._id + "\t" + z.lastmod.t + "|" + z.lastmod.i + "\t" + tojson(z.min) + " -> " + tojson(z.max) + " " + z.shard + "  " + z.ns + "\n";
+        }
+    );
+
+    return s;
+},
+	"printChunks" : function ( ns ){
+    print( "ShardingTest " + this.getChunksString( ns ) );
+},
+	"printShardingStatus" : function (){
+    printShardingStatus( this.config );
+},
+	"printCollectionInfo" : function ( ns , msg ){
+    var out = "";
+    if ( msg )
+        out += msg + "\n";
+    out += "sharding collection info: " + ns + "\n";
+    for ( var i=0; i<this._connections.length; i++ ){
+        var c = this._connections[i];
+        out += "  mongod " + c + " " + tojson( c.getCollection( ns ).getShardVersion() , " " , true ) + "\n";
+    }
+    for ( var i=0; i<this._mongos.length; i++ ){
+        var c = this._mongos[i];
+        out += "  mongos " + c + " " + tojson( c.getCollection( ns ).getShardVersion() , " " , true ) + "\n";
+    }
+
+    out += this.getChunksString( ns );
+
+    print( "ShardingTest " + out );
+},
+	"sync" : function (){
+    this.adminCommand( "connpoolsync" );
+},
+	"onNumShards" : function ( collName , dbName ){
+    this.sync(); // we should sync since we're going directly to mongod here
+    dbName = dbName || "test";
+    var num=0;
+    for ( var i=0; i<this._connections.length; i++ )
+        if ( this._connections[i].getDB( dbName ).getCollection( collName ).count() > 0 )
+            num++;
+    return num;
+},
+	"shardCounts" : function ( collName , dbName ){
+    this.sync(); // we should sync since we're going directly to mongod here
+    dbName = dbName || "test";
+    var counts = {}
+    for ( var i=0; i<this._connections.length; i++ )
+        counts[i] = this._connections[i].getDB( dbName ).getCollection( collName ).count();
+    return counts;
+},
+	"chunkCounts" : function ( collName , dbName ){
+    dbName = dbName || "test";
+    var x = {}
+
+    this.config.shards.find().forEach(
+        function(z){
+            x[z._id] = 0;
+        }
+    );
+
+    this.config.chunks.find( { ns : dbName + "." + collName } ).forEach(
+        function(z){
+            if ( x[z.shard] )
+                x[z.shard]++
+            else
+                x[z.shard] = 1;
+        }
+    );
+    return x;
+
+},
+	"chunkDiff" : function ( collName , dbName ){
+    var c = this.chunkCounts( collName , dbName );
+    var min = 100000000;
+    var max = 0;
+    for ( var s in c ){
+        if ( c[s] < min )
+            min = c[s];
+        if ( c[s] > max )
+            max = c[s];
+    }
+    print( "ShardingTest input: " + tojson( c ) + " min: " + min + " max: " + max  );
+    return max - min;
+},
+	"awaitBalance" : function ( collName , dbName , timeToWait ) {
+    timeToWait = timeToWait || 60000;
+    var shardingTest = this;
+    assert.soon( function() {
+        var x = shardingTest.chunkDiff( collName , dbName );
+        print( "chunk diff: " + x );
+        return x < 2;
+    } , "no balance happened", 60000 );
+
+},
+	"getShard" : function ( coll, query, includeEmpty ){
+    var shards = this.getShards( coll, query, includeEmpty )
+    assert.eq( shards.length, 1 )
+    return shards[0]
+},
+	"getShards" : function ( coll, query, includeEmpty ){
+    if( ! coll.getDB )
+        coll = this.s.getCollection( coll )
+
+    var explain = coll.find( query ).explain()
+    var shards = []
+
+    if( explain.shards ){
+
+        for( var shardName in explain.shards ){
+            for( var i = 0; i < explain.shards[shardName].length; i++ ){
+                if( includeEmpty || ( explain.shards[shardName][i].n && explain.shards[shardName][i].n > 0 ) )
+                    shards.push( shardName )
+            }
+        }
+
+    }
+
+    for( var i = 0; i < shards.length; i++ ){
+        for( var j = 0; j < this._connections.length; j++ ){
+            if ( connectionURLTheSame(  this._connections[j] , shards[i] ) ){
+                shards[i] = this._connections[j]
+                break;
+            }
+        }
+    }
+
+    return shards
+},
+	"isSharded" : function ( collName ){
+
+    var collName = "" + collName
+    var dbName = undefined
+
+    if( typeof collName.getCollectionNames == 'function' ){
+        dbName = "" + collName
+        collName = undefined
+    }
+
+    if( dbName ){
+        var x = this.config.databases.findOne( { _id : dbname } )
+        if( x ) return x.partitioned
+        else return false
+    }
+
+    if( collName ){
+        var x = this.config.collections.findOne( { _id : collName } )
+        if( x ) return true
+        else return false
+    }
+
+},
+	"shardGo" : function ( collName , key , split , move , dbName, waitForDelete ){
+
+    split = ( split != false ? ( split || key ) : split )
+    move = ( split != false && move != false ? ( move || split ) : false )
+
+    if( collName.getDB )
+        dbName = "" + collName.getDB()
+    else dbName = dbName || "test";
+
+    var c = dbName + "." + collName;
+    if( collName.getDB )
+        c = "" + collName
+
+    var isEmpty = this.s.getCollection( c ).count() == 0
+
+    if( ! this.isSharded( dbName ) )
+        this.s.adminCommand( { enableSharding : dbName } )
+
+    var result = this.s.adminCommand( { shardcollection : c , key : key } )
+    if( ! result.ok ){
+        printjson( result )
+        assert( false )
+    }
+
+    if( split == false ) return
+
+    result = this.s.adminCommand( { split : c , middle : split } );
+    if( ! result.ok ){
+        printjson( result )
+        assert( false )
+    }
+
+    if( move == false ) return
+
+    var result = null
+    for( var i = 0; i < 5; i++ ){
+        result = this.s.adminCommand( { movechunk : c , find : move , to : this.getOther( this.getServer( dbName ) ).name, _waitForDelete: waitForDelete } );
+        if( result.ok ) break;
+        sleep( 5 * 1000 );
+    }
+    printjson( result )
+    assert( result.ok )
+
+},
+	"shardColl" : function ( collName , key , split , move , dbName, waitForDelete ){
+
+    split = ( split != false ? ( split || key ) : split )
+    move = ( split != false && move != false ? ( move || split ) : false )
+
+    if( collName.getDB )
+        dbName = "" + collName.getDB()
+    else dbName = dbName || "test";
+
+    var c = dbName + "." + collName;
+    if( collName.getDB )
+        c = "" + collName
+
+    var isEmpty = this.s.getCollection( c ).count() == 0
+
+    if( ! this.isSharded( dbName ) )
+        this.s.adminCommand( { enableSharding : dbName } )
+
+    var result = this.s.adminCommand( { shardcollection : c , key : key } )
+    if( ! result.ok ){
+        printjson( result )
+        assert( false )
+    }
+
+    if( split == false ) return
+
+    result = this.s.adminCommand( { split : c , middle : split } );
+    if( ! result.ok ){
+        printjson( result )
+        assert( false )
+    }
+
+    if( move == false ) return
+
+    var result = null
+    for( var i = 0; i < 5; i++ ){
+        result = this.s.adminCommand( { movechunk : c , find : move , to : this.getOther( this.getServer( dbName ) ).name, _waitForDelete: waitForDelete } );
+        if( result.ok ) break;
+        sleep( 5 * 1000 );
+    }
+    printjson( result )
+    assert( result.ok )
+
+},
+	"setBalancer" : function ( balancer ){
+    if( balancer || balancer == undefined ){
+        this.config.settings.update( { _id: "balancer" }, { $set : { stopped: false } } , true )
+    }
+    else if( balancer == false ){
+        this.config.settings.update( { _id: "balancer" }, { $set : { stopped: true } } , true )
+    }
+},
+	"stopBalancer" : function ( timeout, interval ) {
+    this.setBalancer( false )
+
+    if( typeof db == "undefined" ) db = undefined
+    var oldDB = db
+
+    db = this.config
+    sh.waitForBalancer( false, timeout, interval )
+    db = oldDB
+},
+	"startBalancer" : function ( timeout, interval ) {
+    this.setBalancer( true )
+
+    if( typeof db == "undefined" ) db = undefined
+    var oldDB = db
+
+    db = this.config
+    sh.waitForBalancer( true, timeout, interval )
+    db = oldDB
+},
+	"isAnyBalanceInFlight" : function () {
+    if ( this.config.locks.find({ _id : { $ne : "balancer" }, state : 2 }).count() > 0 )
+        return true;
+
+    var allCurrent = this.s.getDB( "admin" ).currentOp().inprog;
+    for ( var i = 0; i < allCurrent.length; i++ ) {
+        if ( allCurrent[i].desc &&
+             allCurrent[i].desc.indexOf( "cleanupOldData" ) == 0 )
+            return true;
+    }
+    return false;
+},
+	"stopMongos" : function (n) {
+    MongoRunner.stopMongos(this['s' + n].port);
+},
+	"restartMongos" : function (n) {
+    this.stopMongos(n);
+    var newConn = MongoRunner.runMongos(this['s' + n].commandLine);
+
+    this['s' + n] = newConn;
+    if (n == 0) {
+        this.s = newConn;
+    }
+}
+}
+
+mongos> sh.stopBalancer();
+Waiting for active hosts...
+Waiting for the balancer lock...
+Waiting again for active hosts after balancer is off...
+mongos> sh.moveChunk("week5.m202", { "_id" : ISODate("2014-07-17T00:00:00Z") }, "shard0001")
+{ "millis" : 95, "ok" : 1 }
+mongos> sh.moveChunk("week5.m202", { "_id" : ISODate("2014-07-16T00:00:00Z") }, "shard0001")
+{ "millis" : 125, "ok" : 1 }
+mongos> sh.moveChunk("week5.m202", { "_id" : ISODate("2014-07-18T00:00:00Z") }, "shard0001")
+{ "ok" : 0, "errmsg" : "that chunk is already on that shard" }
+
 
