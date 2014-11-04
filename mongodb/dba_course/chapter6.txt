@@ -1,2 +1,64 @@
 For scaling in MongoDB -> Sharding
+Splits are inexpensive
+Migrates are not inexpensive
+The balancer decides what to migrate.
+Migration is based on the amount of chunks.
+
+When having a lot of small chunk size:
+more migrations would have to take place
+very balanced in how much data each shard contains
+
+Processes
+---------
+general: each shard will have a replica set.
+Small mongod storing meta data: config server
+Clients connect to the mongos processes.
+
+mongos: load balancer. 
+You need 3 config servers in production environment.
+At least 1 config server must be up and running.
+
+Cluster setup
+-------------
+4 shards
+3 replica
+3 x 4 = 12 mongod processes
+3 config servers
+4 mongos processes.
+Commonly mongos processes are running on the shards
+
+Create all directories, also for the config servers
+Start Config servers
+mongod --configsvr --dbpath cfg0 --port 26050 --fork --logpath log.cfg0 --logappend
+mongod --configsvr --dbpath cfg1 --port 26051 --fork --logpath log.cfg1 --logappend
+mongod --configsvr --dbpath cfg2 --port 26052 --fork --logpath log.cfg2 --logappend
+
+Start shard servers
+mongod --shardsvr --replSet a --dbpath a0 --logpath log.a0--port 27000 --fork --logappend --smallfiles --oplogSize 50
+mongod --shardsvr --replSet a --dbpath a1 --logpath log.a1--port 27001 --fork --logappend --smallfiles --oplogSize 50
+mongod --shardsvr --replSet a --dbpath a2 --logpath log.a2--port 27002 --fork --logappend --smallfiles --oplogSize 50
+
+mongod --shardsvr --replSet b --dbpath b0 --logpath log.b0--port 27100 --fork --logappend --smallfiles --oplogSize 50
+mongod --shardsvr --replSet b --dbpath b1 --logpath log.b1--port 27101 --fork --logappend --smallfiles --oplogSize 50
+mongod --shardsvr --replSet b --dbpath b2 --logpath log.b2--port 27102 --fork --logappend --smallfiles --oplogSize 50
+
+mongod --shardsvr --replSet c --dbpath c0 --logpath log.c0--port 27200 --fork --logappend --smallfiles --oplogSize 50
+mongod --shardsvr --replSet c --dbpath c1 --logpath log.c1--port 27201 --fork --logappend --smallfiles --oplogSize 50
+mongod --shardsvr --replSet c --dbpath c2 --logpath log.c2--port 27202 --fork --logappend --smallfiles --oplogSize 50
+
+mongod --shardsvr --replSet d --dbpath d0 --logpath log.d0--port 27300 --fork --logappend --smallfiles --oplogSize 50
+mongod --shardsvr --replSet d --dbpath d1 --logpath log.d1--port 27301 --fork --logappend --smallfiles --oplogSize 50
+mongod --shardsvr --replSet d --dbpath d2 --logpath log.d2--port 27302 --fork --logappend --smallfiles --oplogSize 50
+
+# mongos processes
+# using localhost is not recommended
+first one will be running on 27017
+mongos --configdb hostname:26050,hostname2:26051,hosname3:26052 --fork --logpapend --logpath log.mongos0
+mongos --configdb hostname:26050,hostname2:26051,hosname3:26052 --fork --logpapend --logpath log.mongos0 --port 26061
+mongos --configdb hostname:26050,hostname2:26051,hosname3:26052 --fork --logpapend --logpath log.mongos0 --port 26062
+mongos --configdb hostname:26050,hostname2:26051,hosname3:26052 --fork --logpapend --logpath log.mongos0 --port 26063
+
+Best practices:
+config and shard services are not running on default port (27017)
+
 
