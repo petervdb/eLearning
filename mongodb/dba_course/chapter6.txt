@@ -61,4 +61,26 @@ mongos --configdb hostname:26050,hostname2:26051,hosname3:26052 --fork --logpape
 Best practices:
 config and shard services are not running on default port (27017)
 
+for each shard:
+- initiate the replica set
+- add the shard with sh.addShard(...)
+
+Adding the intial shards
+------------------------
+
+mongo --port 27000
+rs.status()
+rs.initiate() // uses default parameters
+rs.add("hostname:27001")
+rs.add("hostname:27002")
+rs.conf() // show configuration
+
+Disconnect and connect to the mongos (27017)
+sh.addShard("a/hostname:27000") // this will also automatically add the other members
+
+Now you can add the other shards to the cluster
+Check with sh.status()
+
+
+
 
