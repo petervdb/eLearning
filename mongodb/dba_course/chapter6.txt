@@ -81,6 +81,16 @@ sh.addShard("a/hostname:27000") // this will also automatically add the other me
 Now you can add the other shards to the cluster
 Check with sh.status()
 
+When no shard key is used, are all documents stored on shard 0.
+When partitioned is true, sharding is enabled.
+
+sh.shardCollection("week6.foo", { _id:1}, true)
+
+week6.foo.stats() and sh.status() gives interesting information about the chunks.
+
+
+
+
 
 
 
