@@ -1,9 +1,0 @@
-start mongod process:
-mongod --dbpath /data/dba/db1 --smallfiles
-
-Loaded data as specified in the homework are restarted mongod process:
-mongod --dbpath /data/dba/db1 --smallfiles --shardsvr
-
-Started the config server as follow:
-mongod --dbpath /data/dba/cfg1 --configsvr
-
