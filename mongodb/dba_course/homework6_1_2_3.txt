@@ -126,4 +126,42 @@ mongos> db.chunks.find({}, {min:1,max:1,shard:1,_id:0,ns:1})
 mongos> homework.b()
 3
 
+Create another shard server:
+mongod --port 27028 --dbpath /data/dba/db2 --smallfiles --shardsvr
+
+Add the shard:
+mongos> sh.addShard("127.0.0.1:27028")
+{ "shardAdded" : "shard0001", "ok" : 1 }
+
+Do some checks:
+mongos> use config
+switched to db config
+
+mongos> db.shards.find()
+{ "_id" : "shard0000", "host" : "127.0.0.1:27018" }
+{ "_id" : "shard0001", "host" : "127.0.0.1:27028" }
+
+mongos> homework.check1()
+db.getSisterDB("config").shards.count() : 
+2
+There are 2 shards in the cluster
+as expected
+
+mongos> db.chunks.find( { ns:"week6.trades" }, {min:1,max:1,shard:1,_id:0} ).sort({min:1})
+{ "min" : { "ticker" : { "$minKey" : 1 }, "time" : { "$minKey" : 1 } }, "max" : { "ticker" : "abcd", "time" : ISODate("2012-03-03T08:04:04.005Z") }, "shard" : "shard0001" }
+{ "min" : { "ticker" : "abcd", "time" : ISODate("2012-03-03T08:04:04.005Z") }, "max" : { "ticker" : "abcd", "time" : ISODate("2012-03-03T08:08:08.012Z") }, "shard" : "shard0001" }
+{ "min" : { "ticker" : "abcd", "time" : ISODate("2012-03-03T08:08:08.012Z") }, "max" : { "ticker" : "abcd", "time" : ISODate("2012-03-03T08:12:12.019Z") }, "shard" : "shard0001" }
+{ "min" : { "ticker" : "abcd", "time" : ISODate("2012-03-03T08:12:12.019Z") }, "max" : { "ticker" : "abcd", "time" : ISODate("2012-03-03T08:16:16.026Z") }, "shard" : "shard0001" }
+{ "min" : { "ticker" : "abcd", "time" : ISODate("2012-03-03T08:16:16.026Z") }, "max" : { "ticker" : "abcd", "time" : ISODate("2012-03-03T08:20:20.033Z") }, "shard" : "shard0001" }
+{ "min" : { "ticker" : "abcd", "time" : ISODate("2012-03-03T08:20:20.033Z") }, "max" : { "ticker" : "abcd", "time" : ISODate("2012-03-03T08:24:24.040Z") }, "shard" : "shard0001" }
+{ "min" : { "ticker" : "abcd", "time" : ISODate("2012-03-03T08:24:24.040Z") }, "max" : { "ticker" : "abcd", "time" : ISODate("2012-03-03T08:28:28.047Z") }, "shard" : "shard0001" }
+{ "min" : { "ticker" : "abcd", "time" : ISODate("2012-03-03T08:28:28.047Z") }, "max" : { "ticker" : "abcd", "time" : ISODate("2012-03-03T08:32:32.054Z") }, "shard" : "shard0000" }
+{ "min" : { "ticker" : "abcd", "time" : ISODate("2012-03-03T08:32:32.054Z") }, "max" : { "ticker" : "abcd", "time" : ISODate("2012-03-03T08:36:36.061Z") }, "shard" : "shard0000" }
+{ "min" : { "ticker" : "abcd", "time" : ISODate("2012-03-03T08:36:36.061Z") }, "max" : { "ticker" : "abcd", "time" : ISODate("2012-03-03T08:40:40.068Z") }, "shard" : "shard0000" }
+{ "min" : { "ticker" : "abcd", "time" : ISODate("2012-03-03T08:40:40.068Z") }, "max" : { "ticker" : "abcd", "time" : ISODate("2012-03-03T08:44:44.079Z") }, "shard" : "shard0000" }
+{ "min" : { "ticker" : "abcd", "time" : ISODate("2012-03-03T08:44:44.079Z") }, "max" : { "ticker" : "abcd", "time" : ISODate("2012-03-03T08:48:48.092Z") }, "shard" : "shard0000" }
+{ "min" : { "ticker" : "abcd", "time" : ISODate("2012-03-03T08:48:48.092Z") }, "max" : { "ticker" : "abcd", "time" : ISODate("2012-03-03T08:52:52.107Z") }, "shard" : "shard0000" }
+{ "min" : { "ticker" : "abcd", "time" : ISODate("2012-03-03T08:52:52.107Z") }, "max" : { "ticker" : "abcd", "time" : ISODate("2012-03-03T08:56:56.122Z") }, "shard" : "shard0000" }
+{ "min" : { "ticker" : "abcd", "time" : ISODate("2012-03-03T08:56:56.122Z") }, "max" : { "ticker" : { "$maxKey" : 1 }, "time" : { "$maxKey" : 1 } }, "shard" : "shard0000" }
+
 
