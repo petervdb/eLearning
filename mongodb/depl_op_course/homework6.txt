@@ -1,0 +1,12 @@
+Homework6
+---------
+mloginfo --queries mtools_example.log
+
+namespace                            pattern                                                                        count    min (ms)    max (ms)    mean (ms)    95%-ile (ms)    sum (ms)
+
+grilled.indigo.papaya                {"_id": 1, "l": {"$not": 1}}                                                    4227           0        3872          482          1189.4     2038017
+
+mlogfilter --namespace grilled.indigo.papaya mtools_example.log > grilled.indigo.papaya.log
+mlogfilter --namespace grilled.indigo.papaya --pattern '{"_id": 1, "l": {"$not": 1}}' mtools_example.log > grilled.indigo.papaya.log
+
+
