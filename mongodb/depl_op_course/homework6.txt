@@ -9,4 +9,4 @@ grilled.indigo.papaya                {"_id": 1, "l": {"$not": 1}}               
 mlogfilter --namespace grilled.indigo.papaya mtools_example.log > grilled.indigo.papaya.log
 mlogfilter --namespace grilled.indigo.papaya --pattern '{"_id": 1, "l": {"$not": 1}}' mtools_example.log > grilled.indigo.papaya.log
 
-
+cat pattern.log | mplotqueries --type histogram --bucketsize 1
