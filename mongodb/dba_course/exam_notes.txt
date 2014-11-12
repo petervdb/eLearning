@@ -1,9 +1,17 @@
-Still need to solved 9 and 10:
+For question 9:
 
 Start processes:
-working directory: /home/petervdb/elearning_mongo/dba_course/exam
 
 mongod --configsvr --dbpath ./data/config_server --port 27019
-mongod --shardsvr --port 27501 --dbpath ./data/s1 --logpath s1.log --replSet s1 --fork
-mongod --shardsvr --port 27601 --dbpath ./data/s2 --logpath s2.log --replSet s2 --fork
+
+I started first 2 standalone mongod instances. 
+Restore databases with mongorestore
+Stopped mongod instance and restart with replSet options abd shardsvr option.
+
+started again as follow:
+mongod --shardsvr --port 27501 --dbpath ./data/s1
+mongod --shardsvr --port 27601 --dbpath ./data/s2
+
+Mongos:
+mongos --configdb localhost:27019
 
