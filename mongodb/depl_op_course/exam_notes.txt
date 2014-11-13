@@ -1,0 +1,54 @@
+Question 1: 
+Started mongod as follow:
+# mongod --dbpath ./db1 --smallfiles
+Connected as mongo and executed:
+
+> use admin
+switched to db admin
+
+db.createUser(
+  {
+    user: "roland",
+    pwd: "12345",
+    roles:
+    [
+      {
+        role: "userAdminAnyDatabase",
+        db: "admin"
+      }
+    ]
+  }
+)
+
+db.createUser(
+  {
+    user: "vespa",
+    pwd: "12345",
+    roles:
+    [
+      {
+        role: "read",
+        db: "testA"
+      },
+      {
+	role: "dbAdmin",
+	db: "testA"
+      },
+      {
+	role: "readWrite",
+	db: "testB"
+      }
+    ]
+  }
+)
+
+Stopped and restarted mongod as follow:
+# mongod --dbpath ./db1 --smallfiles --auth
+
+Test connection:
+mongo -u roland -p 12345 localhost/admin
+
+Important:
+Before creating the users you must be connect to the correct database!
+
+
