@@ -1,0 +1,5 @@
+Made following modification to git config:
+git config --global core.editor "/home/petervdb/sublime2/sublime_text -n -w"
+git config --global push.default upstream
+git config --global merge.conflictstyle diff3
+
