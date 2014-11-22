@@ -9,4 +9,5 @@ Caching your GitHub password in Git
 git config --global credential.helper cache
 git config --global credential.helper 'cache --timeout=3600'
 
-
+Lesson 3:
+working repository: reflections
