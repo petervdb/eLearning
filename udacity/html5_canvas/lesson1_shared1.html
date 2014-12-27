@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Behold the fern!</title>
+</head>
+<body>
+  <canvas id="c" width="500" height="500"></canvas>
+
+  <script>
+    // First the code for a makeshift turtle graphics framework:
+
+    function Turtle(ctx, x, y, heading) {
+      this.ctx = ctx;
+      this.ctx.moveTo(x, y);
+      this.x = x;
+      this.y = y;
+      this.heading = heading;
+    }
+
+    Turtle.prototype.forward = function(distance) {
+      var angle = Math.PI/180 * this.heading;
+      this.x += distance * Math.cos(angle);
+      this.y -= distance * Math.sin(angle);
+      this.ctx.lineTo(this.x, this.y);
+    };
+
+    Turtle.prototype.backward = function(distance) {
+      this.forward(-distance);
+    };
+
+    Turtle.prototype.left = function(angle) {
+      this.heading += angle;
+    };
+
+    Turtle.prototype.right = function(angle) {
+      this.left(-angle);
+    };
+
+    // Now the code for the actual fern:
+
+    function drawPartialFern(t, size, angle, c1, c2) {
+      t.left(angle);
+      drawFern(t, size * c1);
+      t.right(angle);
+      t.backward(size * c2);
+    }
+
+    function drawFern(t, size) {
+      if (size > 1) {
+        t.forward(size);
+        drawPartialFern(t, size, 5, 0.8, 0.05);
+        drawPartialFern(t, size, -40, 0.45, 0.2);
+        drawPartialFern(t, size, 35, 0.4, 0.75);
+      }
+    }
+
+    var c = document.querySelector("#c");
+    var ctx = c.getContext("2d");
+
+    ctx.beginPath();
+    ctx.strokeStyle = "blue";
+    drawFern(new Turtle(ctx, 250, 450, 90), 60);
+    ctx.stroke();
+  </script>
+</body>
+</html>

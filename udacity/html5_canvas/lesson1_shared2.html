@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Behold the updated fern!</title>
+</head>
+<body>
+  <canvas id="c" width="500" height="500"></canvas>
+
+  <script>
+    function drawPartialFern(ctx, size, angle, c1, c2) {
+      ctx.rotate(-Math.PI/180 * angle);
+      drawFern(ctx, size * c1);
+      ctx.rotate(Math.PI/180 * angle);
+      ctx.translate(-size * c2, 0);
+      ctx.moveTo(0, 0);
+    }
+
+    function drawFern(ctx, size) {
+      if (size > 1) {
+        ctx.translate(size, 0);
+        ctx.lineTo(0, 0);
+        drawPartialFern(ctx, size, 5, 0.8, 0.05);
+        drawPartialFern(ctx, size, -40, 0.45, 0.2);
+        drawPartialFern(ctx, size, 35, 0.4, 0.75);
+      }
+    }
+
+    var c = document.querySelector("#c");
+    var ctx = c.getContext("2d");
+
+    ctx.strokeStyle = "blue";
+    ctx.beginPath();
+    ctx.translate(250, 450);
+    ctx.moveTo(0, 0);
+    ctx.rotate(-Math.PI/2);
+    drawFern(ctx, 60);
+    ctx.stroke();
+  </script>
+</body>
+</html>

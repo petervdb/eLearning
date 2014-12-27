@@ -1,0 +1,19 @@
+<html> 
+<head></head> 
+<body> 
+<canvas id="c" width="500" height="500"></canvas> 
+  <script> 
+    var c = document.querySelector("#c"); 
+    var ctx = c.getContext("2d");
+    // first two parameters is the x and y coordinates and the last two is the width and height
+    ctx.strokeRect(50,50,150,150);
+    //tell the browser you are about to start to draw. hover at this initial point of drawing
+    ctx.beginPath();
+    ctx.moveTo(75,75); //coordinate which is the starting point
+    ctx.lineTo(125,75); //move pen from coordinate 75,75 to 125, 75 hence in essence you have drawn a line
+    ctx.lineTo(125,125); //move from 125,75 to 125,125 another line drawn
+    ctx.lineTo(75,75); //coordinate which is the starting point
+    ctx.fill(); //rectangle with black background color
+  </script>
+</body>
+</html>
