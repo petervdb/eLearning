@@ -5,7 +5,7 @@
 # and, del, not, as, elif, or, with, assert, pass, yield, break,except, class, exec, raise, continue, finally, is, lambda, try
 #
 # DONE Keywords:
-# for, in, from, if, else, import, print, def, global, while
+# for, in, from, if, else, import, print, def, global, while, sleep, elif
 #
 # ToDo DataTypes:
 # None, lists
@@ -33,6 +33,7 @@
 
 from time import sleep
 from sys import exit
+import sqlite3
 
 def is_number(s):
     try:
@@ -77,10 +78,20 @@ def start():
     check_user()
     check_user() # Just check again
     age_user = check_age(age_is_known)
-    print"So, %s you are %d years old." % (you, age_user)
+    if age_user < 10:
+        print "Sorry %s, you should be at least 10 years old to use this sophisticated program." % you
+        exit(1)
+    elif age_user < 18:
+        print "I hope you are smart enough to use this program."
+    elif age_user > 99:
+        print "Haha, are you realy that old %s. Let's check this out." % you
+    else:
+        print"So, %s you are %d years old." % (you, age_user)
+        print" We are going to perform some tests to verify that you are realy that old"
 
 # main part
 user_is_known = False
 age_is_known = False
 you = "unknown"
+conn = sqlite3.connect('sqlite_example1.db')
 start()
