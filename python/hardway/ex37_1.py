@@ -51,12 +51,20 @@ def check_user():
         youlow = you.lower()
         # print youlow
         print ("Let's check the database if user %s exists ..." % you)
+        cur.execute("select count(name) from names where name = :youlow", {"youlow": youlow})
+        # cur.commit()
+        row=cur.fetchone()[0]
         # Count to 10 simulating database search
-        for i in range(0, 10):
+        for i in range(0, 5):
                 sleep(0.1)
                 print("."),
+        # print ("Records found: %s " % row)
         print " "
-        print ("Haha, I found you. OK %s, we can continue with this program" % you)
+        if (row == 0):
+            print ("Sorry, I have not been able to find you in my database.")
+            cur.execute("INSERT INTO names values (?);", (youlow,))
+        else:
+            print ("Haha, I found you. OK %s, we can continue with this program" % you)
         user_is_known = True
     else:
         print "Yes, you are already known by the system"
@@ -72,7 +80,7 @@ def check_age(age_is_known):
         print("Your age is known in the database. Great!")
     return(int(your_age))
 
-def math_test():
+def simple_math_test():
     num1 = random.randint(1,10)
     num2 = random.randint(1,10)
     total = num1 + num2
@@ -81,9 +89,24 @@ def math_test():
         print "Yup!"
     else:
         print "Hahaha."
+
+def check_table_names():
+    # Create table
+    cur.execute('''CREATE TABLE IF NOT EXISTS names (name VARCHAR(50) PRIMARY KEY ASC )''')
+
+def list_names():
+    print("List of known names:")
+    print("====================")
+    cur.execute("SELECT * FROM names")
+    rows = cur.fetchall()
+    for row in rows:
+        print "Name: %s " % ( row[0])
+
 def start():
     global user_is_known, age_is_known, you
     print "This script contains code on how to use Keywords, Data Types, String Escape Sequences, String formats and Operators"
+    check_table_names()
+    list_names()
     check_user()
     check_user() # Just check again
     age_user = check_age(age_is_known)
@@ -101,10 +124,13 @@ def start():
     else:
         print"So, %s you are %d years old." % (you, age_user)
         print" We are going to perform some tests to verify that you are realy that old"
-        math_test()
+        simple_math_test()
+
 # main part
 user_is_known = False
 age_is_known = False
 you = "unknown"
 conn = sqlite3.connect('sqlite_example1.db')
+cur = conn.cursor()
+print "Using following SQLite version: " + sqlite3.version
 start()
